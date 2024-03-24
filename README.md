@@ -8,7 +8,8 @@
 **Back-end**
 - C++ 23
 - PostgreSQL
-- WebSocket (https://github.com/zaphoyd/websocketpp?tab=readme-ov-file) 
+- WebSocket (https://github.com/zaphoyd/websocketpp?tab=readme-ov-file)
+- Docker
 
 
 ### Projekto strukūra
