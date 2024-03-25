@@ -1,4 +1,4 @@
-## SendIT - realaus laiko susirašinėjimo programa
+## UAB Kreivarankiai | SendIT - realaus laiko susirašinėjimo programa
 
 ### Komandos nariai ir atsakomybės
 - Leonardas Sinkevičius - `Team lead`, `Designer`, `Developer`
