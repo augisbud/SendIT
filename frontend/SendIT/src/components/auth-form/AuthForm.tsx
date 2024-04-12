@@ -1,10 +1,10 @@
 import './style.css'
-import logo from '../../assets/logo.svg'
+// import logo from '../../assets/logo.svg'
 
 export default function AuthForm() {
     return (
         <div className='form'>
-            <img src={logo} alt="Logo" className="logo" />    
+            {/* <img src={logo} alt="Logo" className="logo" />     */}
             <div className='cont'>
                 <div>
                     <h1 className='heading'>Login</h1>
@@ -12,8 +12,6 @@ export default function AuthForm() {
                 </div>
                 
             </div>
-            
-            
         </div>
     );
 }
