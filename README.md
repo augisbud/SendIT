@@ -6,7 +6,7 @@
 - Edvinas Burba - `Developer`, `Tester`
 
 ### Planuojamos užduotys ir terminai
-- [ ] `2024.04.03` - Sukurti dizainą
+- [x] `2024.04.03` - Sukurti dizainą
 - [ ] `2024.04.17` - Realizuotį sukurtą dizainą naudojant `React`
 - [ ] `2024.04.17` - Sukurti duombazes naudojant `PostgreSQL`
 - [ ] `2024.05.01` - Realizuoti JWT pagrindu vartotojų autentifikaciją ir registraciją (Bus naudojamas `C++`)
