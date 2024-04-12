@@ -1,6 +1,7 @@
 import React from 'react';
 import './navbar.css';
 import logo from '../../assets/logo.svg'
+import Button from '../../components/button/button';
 
 const Navbar: React.FC = () => {
     return (
@@ -17,6 +18,8 @@ const Navbar: React.FC = () => {
                 <li className="navbar-item">
                     <a href="/" className="navbar-link">Pricing</a>
                 </li>
+
+                <Button>Login</Button>
             </ul>
         </nav>
     );
