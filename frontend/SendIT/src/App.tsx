@@ -1,14 +1,11 @@
-import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Home } from "./pages/home/page";
-import { Login } from "./pages/login/login"
+import { Home } from "./pages/Home";
+import { Login } from "./pages/Login/Login"
 
-
-export const App: React.FC = () => (
+export const App = () => (
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<Home />}/>
-      {/* Add here new routes */}
       <Route path="/login" element={<Login />}/>
     </Routes>
   </BrowserRouter>

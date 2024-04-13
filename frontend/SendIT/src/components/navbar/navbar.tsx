@@ -1,28 +1,27 @@
-import React from 'react';
-import './navbar.css';
+import styles from './Navbar.module.scss';
 import logo from '../../assets/logo.svg'
-import Button from '../../components/button/button';
+import { Button } from '../Button/Button';
+import { Link } from 'react-router-dom';
 
-const Navbar: React.FC = () => {
+export const Navbar = () => {
     return (
         <nav>
-            <img className="navbar-brand" src={logo} alt="sendit" />
+            <img className={styles.navbarBrand} src={logo} alt="SendIT" />
 
-            <ul className="navbar-menu">
-                <li className="navbar-item">
-                    <a href="/" className="navbar-link">About Us</a>
+            <ul className={styles.navbarMenu}>
+                <li className={styles.navbarItem}>
+                    <a href="/" className={styles.navbarLink}>About Us</a>
                 </li>
-                <li className="navbar-item">
-                    <a href="/" className="navbar-link">Services</a>
+                <li className={styles.navbarItem}>
+                    <a href="/" className={styles.navbarLink}>Services</a>
                 </li>
-                <li className="navbar-item">
-                    <a href="/" className="navbar-link">Pricing</a>
+                <li className={styles.navbarItem}>
+                    <a href="/" className={styles.navbarLink}>Pricing</a>
                 </li>
-
-                <Button>Login</Button>
+                <Link to={"/login"} style={{textDecoration: "none"}}>
+                    <Button style={{padding: "0.5rem 1.5rem", fontSize: "18px"}}>Login</Button>
+                </Link>
             </ul>
         </nav>
     );
 };
-
-export default Navbar;

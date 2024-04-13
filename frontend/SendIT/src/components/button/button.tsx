@@ -1,19 +1,15 @@
-import React, { CSSProperties, ReactNode } from 'react';
-
-import './button.css';
+import { CSSProperties, ReactNode } from 'react';
+import styles from './Button.module.scss';
 
 interface ButtonProps {
   style?: CSSProperties;
-  onClick?: () => void;
   children?: ReactNode;
 }
 
-const Button: React.FC<ButtonProps> = ({ children, style, onClick }) => {
+export const Button = ({ style, children } : ButtonProps) => {
   return (
-    <div className='button' style={style} onClick={onClick}>
+    <div className={styles.button} style={style}>
       {children}
     </div>
   );
 };
-
-export default Button;
