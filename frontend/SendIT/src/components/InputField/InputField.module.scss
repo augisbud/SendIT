@@ -51,14 +51,7 @@
     z-index: 1
 }
 
-.form-field input:not(:placeholder-shown) + label {
-    font-size: 14px;
-    top: 0;
-    left: 10px;
-    color: #467DFC;
-    background-color: #fff;
-}
-
+.form-field input:not(:placeholder-shown) + label,
 .form-field:focus-within input + label {
     font-size: 14px;
     top: 0;
