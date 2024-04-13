@@ -9,7 +9,7 @@ interface ButtonProps {
 export const Button = ({ style, children } : ButtonProps) => {
   return (
     <div className={styles.button} style={style}>
-      {children}
+      { children }
     </div>
   );
 };

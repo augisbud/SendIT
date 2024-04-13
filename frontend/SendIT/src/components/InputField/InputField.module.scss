@@ -1,8 +1,8 @@
-.form-field {
+.input-field {
     position: relative;
 }
 
-.form-field input {
+.input-field input {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -30,7 +30,7 @@
     margin: 0
 }
 
-.form-field label {
+.input-field label {
     position: absolute;
     top: 26px;
     left: 16px;
@@ -46,13 +46,13 @@
     text-overflow: ellipsis;
     transform: translateY(-50%);
     transform-origin: 0;
-    transition:transform .15s ease-in-out,top .15s ease-in-out,padding .15s ease-in-out;
+    transition: transform .15s ease-in-out, top .15s ease-in-out, padding .15s ease-in-out;
     white-space: nowrap;
     z-index: 1
 }
 
-.form-field input:not(:placeholder-shown) + label,
-.form-field:focus-within input + label {
+.input-field input:not(:placeholder-shown) + label,
+.input-field:focus-within input + label {
     font-size: 14px;
     top: 0;
     left: 10px;
