@@ -10,7 +10,7 @@ export const InputField = ({ type, id, label } : InputFieldProps) => {
   return (
     <div className={styles.formField}>
         <input className={styles.formInput} type={type} id={id} placeholder=''/>
-        <label> {label} </label>
+        <label>{ label }</label>
     </div>
   );
 };
