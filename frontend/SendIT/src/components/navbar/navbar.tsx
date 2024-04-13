@@ -1,22 +1,22 @@
+import { Logo } from '../Logo/Logo';
 import styles from './Navbar.module.scss';
-import logo from '../../assets/logo.svg'
 import { Button } from '../Button/Button';
 import { Link } from 'react-router-dom';
 
 export const Navbar = () => {
     return (
         <nav>
-            <img className={styles.navbarBrand} src={logo} alt="SendIT" />
-
+            <Logo />
+                        
             <ul className={styles.navbarMenu}>
                 <li className={styles.navbarItem}>
-                    <a href="/" className={styles.navbarLink}>About Us</a>
+                    <Link className={styles.navbarLink} to={"/"}>About Us</Link>
                 </li>
                 <li className={styles.navbarItem}>
-                    <a href="/" className={styles.navbarLink}>Services</a>
+                    <Link className={styles.navbarLink} to={"/"}>Services</Link>
                 </li>
                 <li className={styles.navbarItem}>
-                    <a href="/" className={styles.navbarLink}>Pricing</a>
+                    <Link className={styles.navbarLink} to={"/"}>Pricing</Link>
                 </li>
                 <Link to={"/login"} style={{textDecoration: "none"}}>
                     <Button style={{padding: "0.5rem 1.5rem", fontSize: "18px"}}>Login</Button>
