@@ -16,8 +16,10 @@
     height: 52px;
     line-height: 1.1;
     outline: none;
-    padding-block:1px;padding-inline:2px;padding: 0 16px;
-    transition:box-shadow .2s ease-in-out,border-color .2s ease-in-out;
+    padding-block: 1px;
+    padding-inline: 2px;
+    padding: 0 16px;
+    transition: box-shadow .2s ease-in-out, border-color .2s ease-in-out;
     width: 100%;
     text-rendering: auto;
     letter-spacing: normal;
@@ -51,11 +53,11 @@
     z-index: 1
 }
 
-.input-field input:not(:placeholder-shown) + label,
-.input-field:focus-within input + label {
+.input-field input:not(:placeholder-shown)+label,
+.input-field:focus-within input+label {
     font-size: 14px;
     top: 0;
-    left: 10px;
+    left: 16px;
     color: #467DFC;
     background-color: #fff;
 }

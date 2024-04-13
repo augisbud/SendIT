@@ -7,7 +7,7 @@ export const Navbar = () => {
     return (
         <nav>
             <Logo />
-                        
+
             <ul className={styles.navbarMenu}>
                 <li className={styles.navbarItem}>
                     <Link className={styles.navbarLink} to={"/"}>About Us</Link>
@@ -18,8 +18,8 @@ export const Navbar = () => {
                 <li className={styles.navbarItem}>
                     <Link className={styles.navbarLink} to={"/"}>Pricing</Link>
                 </li>
-                <Link to={"/login"} style={{textDecoration: "none"}}>
-                    <Button style={{padding: "0.5rem 1.5rem", fontSize: "18px"}}>Login</Button>
+                <Link to={"/login"} style={{ textDecoration: "none" }}>
+                    <Button style={{ padding: "0.5rem 1.5rem", fontSize: "18px" }}>Login</Button>
                 </Link>
             </ul>
         </nav>
