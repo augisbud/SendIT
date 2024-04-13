@@ -1,0 +1,68 @@
+.form-field {
+    position: relative;
+}
+
+.form-field input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: #fff;
+    border: 1px solid #c2c8d0;
+    border-radius: 6px;
+    box-sizing: border-box;
+    color: #2d333a;
+    font-family: inherit;
+    font-size: 16px;
+    height: 52px;
+    line-height: 1.1;
+    outline: none;
+    padding-block:1px;padding-inline:2px;padding: 0 16px;
+    transition:box-shadow .2s ease-in-out,border-color .2s ease-in-out;
+    width: 100%;
+    text-rendering: auto;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: start;
+    margin: 0
+}
+
+.form-field label {
+    position: absolute;
+    top: 26px;
+    left: 16px;
+    background-color: #fff;
+    color: #6f7780;
+    font-size: 16px;
+    font-weight: 400;
+    margin-bottom: 8px;
+    max-width: 90%;
+    overflow: hidden;
+    pointer-events: none;
+    padding: 1px 6px;
+    text-overflow: ellipsis;
+    transform: translateY(-50%);
+    transform-origin: 0;
+    transition:transform .15s ease-in-out,top .15s ease-in-out,padding .15s ease-in-out;
+    white-space: nowrap;
+    z-index: 1
+}
+
+.form-field input:not(:placeholder-shown) + label {
+    font-size: 14px;
+    top: 0;
+    left: 10px;
+    color: #467DFC;
+    background-color: #fff;
+}
+
+.form-field:focus-within input + label {
+    font-size: 14px;
+    top: 0;
+    left: 10px;
+    color: #467DFC;
+    background-color: #fff;
+}

@@ -1,11 +1,10 @@
-import React from "react";
-import AuthForm from "../../components/auth-form/AuthForm";
-import './login.css'
+import styles from './Login.module.scss'
+import { AuthenticationForm } from "../../components/AuthenticationForm/AuthenticationForm";
 
-export const Login: React.FC = () => {
+export const Login = () => {
     return (
-        <div className="container">
-            <AuthForm />
+        <div className={styles.container}>
+            <AuthenticationForm />
         </div>
     );
 };
