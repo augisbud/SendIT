@@ -1,0 +1,19 @@
+@use '../src/style/variables.scss' as *;
+@use '../src/style/typography.module.scss' as *;
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nosifer&family=Poppins:wght@500;800&display=swap');
+
+html,
+body {
+    max-width: 100vw;
+    margin: 0;
+    color: $textPrimary;
+    font-family: "Montserrat", "Poppins";
+}
+
+h1 { @extend %h1; }
+h2 { @extend %h2; }
+h3 { @extend %h3; }
+h4 { @extend %h4; }
+h5 { @extend %h5; }
+p { @extend %p; }

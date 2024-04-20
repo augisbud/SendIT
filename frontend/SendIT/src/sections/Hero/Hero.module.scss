@@ -1,3 +1,5 @@
+@use "../../style/variables.scss" as *;
+
 .hero {
     display: flex;
     justify-content: center;
@@ -12,21 +14,15 @@
 
         h1 {
             margin: 0;
-            font-size: 64px;
-            font-style: normal;
-            font-weight: 800;
-
+            
             span {
-                color: #467DFC;
+                color: $colorPrimary;
             }
         }
 
         p {
             width: 900px;
             margin: 22px 0;
-            font-size: 16px;
-            font-style: normal;
-            font-weight: 400;
         }
     }
 }
