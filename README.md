@@ -5,14 +5,6 @@
 - Augustas Budnikas - `Architect`, `Tester`
 - Edvinas Burba - `Developer`, `Tester`
 
-### Planuojamos užduotys ir terminai
-- [x] `2024.04.03` - Sukurti dizainą
-- [ ] `2024.04.17` - Realizuotį sukurtą dizainą naudojant `React`
-- [ ] `2024.04.17` - Sukurti duombazes naudojant `PostgreSQL`
-- [ ] `2024.05.01` - Realizuoti JWT pagrindu vartotojų autentifikaciją ir registraciją (Bus naudojamas `C++`)
-- [ ] `2024.05.01` - Realizuoti visų duomenų įrašymą ir nuskaitymą iš duombazių
-- [ ] `2024.05.08` - Realizuoti draugų sistemą
-
 ### Naudojamos technologijos
 **Front-end**
 - React & Typescript & Vite
