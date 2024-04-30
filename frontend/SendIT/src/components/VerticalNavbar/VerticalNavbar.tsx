@@ -8,6 +8,7 @@ import chat from "../../assets/chat.svg";
 import friend from "../../assets/friend.svg";
 import mode from "../../assets/mode.svg";
 import settings from "../../assets/settings.svg";
+import logout from "../../assets/logout.svg";
 
 export const VerticalNavbar = () => {
   const location = useLocation();
@@ -42,6 +43,11 @@ export const VerticalNavbar = () => {
           </li>
         </ul>
       </div>
+      <li className={styles.Logout}>
+            <Link className={styles.navbarLink} to={"/"}>
+                <img src={logout} alt="logout" />
+            </Link>
+          </li>
     </div>
   );
 };
