@@ -38,7 +38,7 @@ export const Login = () => {
                 </div>
                 <div>
                     <Button
-                        style={{ padding: "0.25rem 0", fontSize: "12px", width: "100%" }}
+                        style={{ padding: "0.5rem 0", fontSize: "18px" }}
                         onClick={
                             () => {
                                 if (!inputData || !inputData.email || !inputData.password) {
