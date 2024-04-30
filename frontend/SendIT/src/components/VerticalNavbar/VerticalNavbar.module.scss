@@ -20,7 +20,7 @@
     }
 }
 
-.navbar-menu {
+.navbarMenu {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -30,18 +30,18 @@
     padding: 0;
 }
 
-.navbar-item {
+.navbarItem {
     list-style: none;
     margin: 0;
 }
 
-.navbar-link {
+.navbarLink {
     font-size: 18px;
     color: white;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
-.navbar-link:hover {
+.navbarLink:hover {
     color: #467DFC;
 }

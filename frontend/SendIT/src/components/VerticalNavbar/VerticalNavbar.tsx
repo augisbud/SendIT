@@ -1,3 +1,5 @@
+import { useLocation } from "react-router-dom";
+
 import styles from "./VerticalNavbar.module.scss";
 import { Link } from "react-router-dom";
 import { Logo } from "../Logo/Logo";
@@ -8,6 +10,10 @@ import mode from "../../assets/mode.svg";
 import settings from "../../assets/settings.svg";
 
 export const VerticalNavbar = () => {
+  const location = useLocation();
+
+  const path = location.pathname;
+
   return (
     <div className={styles.navbar}>
       <div className={styles.navbarBody}>
@@ -16,7 +22,7 @@ export const VerticalNavbar = () => {
         <ul className={styles.navbarMenu}>
           <li className={styles.navbarItem}>
             <Link className={styles.navbarLink} to={"/"}>
-              <img src={chat} alt="chat" />
+              <img src={chat} alt="chat" className={`${path === "/chat" ? styles.active : ""}`}/>
             </Link>
           </li>
           <li className={styles.navbarItem}>
