@@ -21,12 +21,12 @@ export const VerticalNavbar = () => {
 
         <ul className={styles.navbarMenu}>
           <li className={styles.navbarItem}>
-            <Link className={styles.navbarLink} to={"/"}>
+            <Link className={styles.navbarLink} to={"/chat"}>
               <img src={chat} alt="chat" className={`${path === "/chat" ? styles.active : ""}`}/>
             </Link>
           </li>
           <li className={styles.navbarItem}>
-            <Link className={styles.navbarLink} to={"/"}>
+            <Link className={styles.navbarLink} to={"/friend"}>
                 <img src={friend} alt="friend" />
             </Link>
           </li>
@@ -36,7 +36,7 @@ export const VerticalNavbar = () => {
             </Link>
           </li>
           <li className={styles.navbarItem}>
-            <Link className={styles.navbarLink} to={"/"}>
+            <Link className={styles.navbarLink} to={"/settings"}>
                 <img src={settings} alt="settings" />
             </Link>
           </li>

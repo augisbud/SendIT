@@ -1,5 +1,5 @@
 .navbar {
-    position: absolute;
+    position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
@@ -7,6 +7,7 @@
     overflow: hidden;
     margin: 0;
     padding: 30px 10px;
+    width: 50px;
 }
 
 .navbarBody {
@@ -36,8 +37,6 @@
 }
 
 .navbarLink {
-    font-size: 18px;
-    color: white;
     text-decoration: none;
     transition: color 0.3s ease;
 }
