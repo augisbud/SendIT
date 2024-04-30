@@ -48,7 +48,7 @@ export const Login = () => {
                                 }
 
                                 // GO FETCH, store JWT in localStorage
-                                navigate("/");
+                                navigate("/chat");
                             }
                         }
                     >
