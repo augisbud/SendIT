@@ -12,9 +12,16 @@
 
 **Back-end**
 - C++ 23
-- PostgreSQL
+- SQLite
 - [WebSocket](https://www.zaphoyd.com/projects/websocketpp/)
 - Docker
+
+### Paleidimas
+Linux Aplinkoje Backend galima sukompiliuoti naudojantis:
+```
+cmake .
+make
+```
 
 
 ### Projekto strukūra
