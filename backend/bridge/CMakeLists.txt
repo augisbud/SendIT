@@ -1,13 +1,13 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required (VERSION 3.5)
 project(BridgeServer)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(SQLITECPP_RUN_CPPCHECK OFF CACHE BOOL "" FORCE)
-set(SQLITECPP_RUN_CPPLINT OFF CACHE BOOL "" FORCE)
+include_directories(external/Asio)
+include_directories(external/Crow)
 add_subdirectory(external/SQLiteCpp)
 
-add_executable(Bridge src/main.cpp)
-
-target_link_libraries(Bridge SQLiteCpp)
+add_executable(executable main.cpp)
+target_link_libraries(executable SQLiteCpp)
