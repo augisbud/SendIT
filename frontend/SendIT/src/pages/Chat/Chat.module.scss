@@ -1,0 +1,10 @@
+main {
+    height: 100vh;
+}
+
+.chatWrapper {
+    margin-left: 70px;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    height: 100%;
+}

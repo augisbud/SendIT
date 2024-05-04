@@ -1,0 +1,16 @@
+@use "../../style/variables.scss" as *;
+
+.inboxSection {
+    display: flex;
+    flex-direction: column;
+    background-color: $bgPrimary;
+    padding: 30px 30px;
+}
+
+.inboxFunctionsArea {
+
+}
+
+.inboxList {
+    
+}
