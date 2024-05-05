@@ -1,0 +1,28 @@
+.ResponseMessage {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 0rem 0rem 1rem 1rem;
+}
+
+b {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+.UserInfo {
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.message {
+    border-radius: 0px 30px 30px 30px;
+    background: #DFDFDF;
+    max-width: fit-content;
+    max-height: fit-content;
+    padding: 1rem;
+    margin-left: 2rem;
+}
