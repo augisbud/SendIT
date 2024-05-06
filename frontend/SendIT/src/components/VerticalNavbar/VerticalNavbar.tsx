@@ -8,8 +8,6 @@ import chatWhite from "../../assets/chat-white.svg";
 import chatBlue from "../../assets/chat-blue.svg";
 import friendWhite from "../../assets/friend-white.svg";
 import friendBlue from "../../assets/friend-blue.svg";
-import modeWhite from "../../assets/mode-white.svg";
-import modeBlue from "../../assets/mode-blue.svg";
 import settingsWhite from "../../assets/settings-white.svg";
 import settingsBlue from "../../assets/settings-blue.svg";
 import logout from "../../assets/logout.svg";
@@ -31,11 +29,6 @@ export const VerticalNavbar = () => {
           <li className={styles.navbarItem}>
             <Link className={styles.navbarLink} to="/add-friend">
               <img src={pathname === "/add-friend" ? friendBlue : friendWhite} alt="friend" />
-            </Link>
-          </li>
-          <li className={styles.navbarItem}>
-            <Link className={styles.navbarLink} to="/mode">
-              <img src={pathname === "/mode" ? modeBlue : modeWhite} alt="mode" />
             </Link>
           </li>
           <li className={styles.navbarItem}>
