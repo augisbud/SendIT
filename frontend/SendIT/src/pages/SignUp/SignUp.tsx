@@ -6,7 +6,6 @@ import { InputField } from '../../components/InputField/InputField';
 import { Button } from '../../components/Button/Button';
 
 interface Fields {
-    email?: string;
     username?: string;
     password?: string;
     confirmPassword?: string;
@@ -17,6 +16,38 @@ export const SignUp = () => {
 
     const [inputData, setInputData] = useState<Fields>();
 
+    if (inputData?.password !== inputData?.confirmPassword) {
+        alert("Passwords are not the same.");
+        return;
+    }
+
+    const handleRegister = async () => {
+        if (!inputData || !inputData.username || !inputData.password) {
+            alert("Missing Inputs.");
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:8080/register', {
+                method: 'POST',
+                headers: {
+                    'Access-Control-Allow-Origin': 'origin',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(inputData)
+            });
+
+            if (response.ok) {
+                navigate("/chat");
+            } else {
+                const data = await response.json();
+                alert(data.message);
+            }
+        } catch (error) {
+            alert('An error occurred while registering. Please try again later.');
+        }
+    };
+
     return (
         <div className={styles.container}>
             <div className={styles.wrapper}>
@@ -25,12 +56,6 @@ export const SignUp = () => {
                     <h1 className={styles.title}>Sign Up</h1>
                 </div>
                 <div>
-                    <InputField
-                        type="email"
-                        name="email"
-                        label='Email address'
-                        onChange={(e) => setInputData({ ...inputData, email: e.target.value })}
-                    />
                     <InputField
                         type="text"
                         name="username"
@@ -53,18 +78,7 @@ export const SignUp = () => {
                 <div>
                     <Button
                         style={{ padding: "0.5rem 0", fontSize: "18px" }}
-                        onClick={
-                            () => {
-                                if (!inputData || !inputData.email || !inputData.username || !inputData.password || !inputData.confirmPassword) {
-                                    alert("Missing Inputs.");
-
-                                    return;
-                                }
-
-                                // GO FETCH, store JWT in localStorage
-                                navigate("/chat");
-                            }
-                        }
+                        onClick={handleRegister}
                     >
                         Create an account
                     </Button>

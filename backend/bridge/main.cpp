@@ -64,8 +64,16 @@ int main() {
         SQLite::Database db("main.db3", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
         db.exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT NOT NULL, password TEXT NOT NULL)");
 
-        crow::SimpleApp app;
+        crow::App<crow::CORSHandler> app;
         app.loglevel(crow::LogLevel::Warning);
+
+        auto& cors = app.get_middleware<crow::CORSHandler>();
+        cors
+        .global()
+            .methods("POST"_method, "GET"_method)
+        .prefix("/")
+            .origin("*")
+            .allow_credentials();
 
         CROW_ROUTE(app, "/health")
         ([] () {
