@@ -1,0 +1,38 @@
+@use "../../style/variables.scss" as *;
+
+.cardArea {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $bgCover;
+    border-radius: 30px;
+    gap: 25px;
+    margin: 1.5rem 0rem;
+    padding: 1rem 5rem 1rem 2rem;
+}
+
+.cardDesc {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+
+    img {
+        border-radius: 84px;
+        width: 84px;
+        height: 80px;
+    }
+}
+
+.cardHeading {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    h4, p {
+        margin: 1rem;
+        padding: 0;
+    }
+}
+

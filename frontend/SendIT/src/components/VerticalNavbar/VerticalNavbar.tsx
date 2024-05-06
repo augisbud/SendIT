@@ -27,7 +27,7 @@ export const VerticalNavbar = () => {
             </Link>
           </li>
           <li className={styles.navbarItem}>
-            <Link className={styles.navbarLink} to={"/friend"}>
+            <Link className={styles.navbarLink} to={"/add-friend"}>
                 <img src={friend} alt="friend" />
             </Link>
           </li>
