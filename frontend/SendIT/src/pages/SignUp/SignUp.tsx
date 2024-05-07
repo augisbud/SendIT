@@ -16,12 +16,12 @@ export const SignUp = () => {
 
     const [inputData, setInputData] = useState<Fields>();
 
-    if (inputData?.password !== inputData?.confirmPassword) {
-        alert("Passwords are not the same.");
-        return;
-    }
-
     const handleRegister = async () => {
+        if (inputData?.password !== inputData?.confirmPassword) {
+            alert("Passwords are not the same.");
+            return;
+        }
+
         if (!inputData || !inputData.username || !inputData.password) {
             alert("Missing Inputs.");
             return;
@@ -38,6 +38,11 @@ export const SignUp = () => {
             });
 
             if (response.ok) {
+                const data = await response.json();
+                const token = data.token;
+
+                localStorage.setItem("authToken", token);
+
                 navigate("/chat");
             } else {
                 const data = await response.json();
