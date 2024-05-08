@@ -7,7 +7,7 @@ import { Settings } from './pages/Settings/Settings';
 
 import "./globals.scss";
 import { AddFriend } from './pages/AddFriend/AddFriend';
-
+ 
 export const App = () => (
   <BrowserRouter>
     <Routes>
