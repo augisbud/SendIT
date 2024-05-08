@@ -10,7 +10,7 @@ export const Chat = () => {
 
             <div className={styles.chatWrapper}>
                 <Inbox />
-                <Conversation />
+                <Conversation/>
             </div>
         </main>
     );
