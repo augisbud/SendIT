@@ -39,7 +39,8 @@ export const SignUp = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                const token = data.token;
+                let token = data.token;
+                token = token.replace("Basic ", "");
 
                 localStorage.setItem("authToken", token);
 
