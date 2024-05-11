@@ -7,6 +7,7 @@ import { Button } from '../../components/Button/Button';
 
 interface Fields {
     username?: string;
+    email?: string;
     password?: string;
     confirmPassword?: string;
 }
@@ -14,16 +15,48 @@ interface Fields {
 export const SignUp = () => {
     const navigate = useNavigate();
 
-    const [inputData, setInputData] = useState<Fields>();
+    const [inputData, setInputData] = useState<Fields>({});
+    const [errors, setErrors] = useState<Fields>({});
 
-    const handleRegister = async () => {
-        if (inputData?.password !== inputData?.confirmPassword) {
-            alert("Passwords are not the same.");
-            return;
+    const validateFields = () => {
+        let isValid = true;
+        let newErrors: Fields = {};
+
+        if (!inputData.username) {
+            newErrors.username = "Username is required";
+            isValid = false;
         }
 
-        if (!inputData || !inputData.username || !inputData.password) {
-            alert("Missing Inputs.");
+        if (!inputData.email) {
+            newErrors.email = "Email is required";
+            isValid = false;
+        } else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(inputData.email)) {
+            newErrors.email = "Email is invalid";
+            isValid = false;
+        }
+
+        if (!inputData.password) {
+            newErrors.password = "Password is required";
+            isValid = false;
+        }
+
+        if (!inputData.confirmPassword) {
+            newErrors.confirmPassword = "Confirming password is required";
+            isValid = false;
+        }
+
+        if (inputData.password && inputData.confirmPassword && inputData.password !== inputData.confirmPassword) {
+            newErrors.confirmPassword = "Passwords do not match";
+            isValid = false;
+        }
+
+        setErrors(newErrors);
+        return isValid;
+    };
+
+    const handleRegister = async () => {
+        if (!validateFields()) {
+            alert("Please correct the highlighted errors before submitting.");
             return;
         }
 
@@ -31,7 +64,7 @@ export const SignUp = () => {
             const response = await fetch('http://localhost:8080/register', {
                 method: 'POST',
                 headers: {
-                    'Access-Control-Allow-Origin': 'origin',
+                    'Access-Control-Allow-Origin': '*',
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(inputData)
@@ -40,10 +73,9 @@ export const SignUp = () => {
             if (response.ok) {
                 const data = await response.json();
                 let token = data.token;
-                token = token.replace("Basic ", "");
+                token = token.replace("Bearer ", ""); // Adjusting based on token type (Bearer assumed)
 
                 localStorage.setItem("authToken", token);
-
                 navigate("/chat");
             } else {
                 const data = await response.json();
@@ -66,18 +98,32 @@ export const SignUp = () => {
                         type="text"
                         name="username"
                         label='Username'
+                        value={inputData.username || ''}
+                        error={errors.username}
                         onChange={(e) => setInputData({ ...inputData, username: e.target.value })}
+                    />
+                    <InputField
+                        type="email"
+                        name="email"
+                        label='Email address'
+                        value={inputData.email || ''}
+                        error={errors.email}
+                        onChange={(e) => setInputData({ ...inputData, email: e.target.value })}
                     />
                     <InputField
                         type="password"
                         name="password"
                         label='Password'
+                        value={inputData.password || ''}
+                        error={errors.password}
                         onChange={(e) => setInputData({ ...inputData, password: e.target.value })}
                     />
                     <InputField
                         type="password"
                         name="confirmPassword"
                         label='Confirm password'
+                        value={inputData.confirmPassword || ''}
+                        error={errors.confirmPassword}
                         onChange={(e) => setInputData({ ...inputData, confirmPassword: e.target.value })}
                     />
                 </div>

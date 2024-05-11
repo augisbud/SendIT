@@ -53,6 +53,14 @@
     z-index: 1
 }
 
+.errorMessage {
+    color: red;
+    font-size: 14px;
+    font-family: inherit;
+    max-width: 15rem;
+    
+}
+
 .input-field input:not(:placeholder-shown)+label,
 .input-field:focus-within input+label {
     font-size: 14px;
