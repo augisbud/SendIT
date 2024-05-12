@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 
 type MessageData = {
@@ -6,6 +7,7 @@ type MessageData = {
 };
 
 export const WSExample: React.FC = () => {
+    const queryParams = useSearchParams()[0];
     const [log, setLog] = useState<string>("");
 
     const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(
@@ -17,8 +19,6 @@ export const WSExample: React.FC = () => {
     );
 
     useEffect(() => {
-        const queryParams = new URLSearchParams(window.location.search);
-
         if (readyState === ReadyState.OPEN) {
           sendJsonMessage({
             __TYPE__: "subscribe",
@@ -41,6 +41,7 @@ export const WSExample: React.FC = () => {
         if (readyState === ReadyState.OPEN) {
             const messageObject: MessageData = {
                 __TYPE__: "message",
+                token: btoa(queryParams.get("username") + ":" + queryParams.get("password")),
                 message: (document.getElementById("message") as HTMLInputElement).value,
                 recipientId: parseInt((document.getElementById("recipientId") as HTMLInputElement).value)
             };
