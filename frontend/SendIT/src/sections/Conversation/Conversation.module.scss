@@ -9,18 +9,21 @@
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    overflow-y: auto;
+    overflow-y: auto !important;
+    max-height: 656px !important;
 }
 
 .sendContainer {
     margin-top: 1rem;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    
     gap: 15px;
     position: relative;
 
     input {
         font-size: 16px;
+        width: 100%;
         padding: 1rem;
         border-radius: 100vw;
         border: 3px solid #E7E7E7;
