@@ -19,8 +19,8 @@
 ### Paleidimas
 Linux Aplinkoje Backend galima sukompiliuoti naudojantis:
 ```
-cmake .
-make
+mkdir build && cd build
+cmake .. && make && ./executable
 ```
 
 
