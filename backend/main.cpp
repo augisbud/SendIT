@@ -171,6 +171,38 @@ int main() {
             return crow::response(response);
         });
 
+        CROW_ROUTE(app, "/users/<string>")
+        ([&db](const crow::request& req, std::string username) {
+            const auto& headers = req.headers;
+            auto authHeader = headers.find("Authorization");
+            if (authHeader == headers.end())
+                return crow::response(403);
+
+            auto userId = getUserId(db, authHeader->second.substr(6));
+            if (!userId.has_value())
+                return crow::response(403);
+
+            SQLite::Statement query(db, "SELECT * FROM users WHERE LOWER(username) LIKE '%' || LOWER(?) || '%';");
+            query.bind(1, username);
+
+            std::vector<crow::json::wvalue> users;
+            try {
+                while (query.executeStep()) {
+                    crow::json::wvalue user;
+                    user["id"] = query.getColumn(0).getInt();
+                    user["username"] = query.getColumn(1).getText();
+                    users.push_back(user);
+                }
+            } catch (const std::exception& e) {
+                CROW_LOG_ERROR << "Error executing SQL query: " << e.what();
+                return crow::response(500);
+            }
+
+            crow::json::wvalue response = std::move(users);
+
+            return crow::response(response);
+        });
+
         CROW_ROUTE(app, "/chats/")
         ([&db](const crow::request& req) {
             const auto& headers = req.headers;
