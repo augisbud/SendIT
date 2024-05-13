@@ -16,6 +16,14 @@ public:
 
 std::vector<Connection> connections;
 
+std::string generateToken(const std::string& username, const std::string& password) {
+    std::string combined = username + ":" + password;
+
+    std::stringstream ss;
+    ss << "Basic " << crow::utility::base64encode(combined, combined.size());
+    return ss.str();
+}
+
 std::optional<int> getUserId(SQLite::Database& db, std::string token) {
     std::string credentials = crow::utility::base64decode(token, token.size());
 
@@ -108,9 +116,12 @@ int main() {
         .methods("POST"_method)
         ([&db] (const crow::request& req) {
             auto json = crow::json::load(req.body);
-            if(!json) {
+            if(!json)
                 return crow::response(400);
-            }
+            if(!json.has("username") || json["username"].t() != crow::json::type::String)
+                return crow::response(400);
+            if(!json.has("password") || json["password"].t() != crow::json::type::String)
+                return crow::response(400);
 
             std::string username = json["username"].s();
             std::string password = json["password"].s();
@@ -131,10 +142,72 @@ int main() {
             insertQuery.bind(2, password); // Ideally, we should encrypt the password.
             insertQuery.exec();
 
-            return crow::response(200);
+            crow::json::wvalue response;
+            response["token"] = generateToken(username, password);
+
+            return crow::response(response);
         });
 
-        CROW_ROUTE(app, "/chat/<int>")
+        CROW_ROUTE(app, "/login")
+        .methods("POST"_method)
+        ([&db](const crow::request& req) {
+            auto json = crow::json::load(req.body);
+            if(!json)
+                return crow::response(400);
+            if(!json.has("username") || json["username"].t() != crow::json::type::String)
+                return crow::response(400);
+            if(!json.has("password") || json["password"].t() != crow::json::type::String)
+                return crow::response(400);
+
+            std::string token = generateToken(json["username"].s(), json["password"].s());
+
+            auto userId = getUserId(db, token.substr(6));
+            if(!userId.has_value())
+                return crow::response(403);
+
+            crow::json::wvalue response;
+            response["token"] = token;
+
+            return crow::response(response);
+        });
+
+        CROW_ROUTE(app, "/chats/")
+        ([&db](const crow::request& req) {
+            const auto& headers = req.headers;
+            auto authHeader = headers.find("Authorization");
+            if (authHeader == headers.end())
+                return crow::response(403);
+
+            auto userId = getUserId(db, authHeader->second.substr(6));
+            if (!userId.has_value())
+                return crow::response(403);
+
+            SQLite::Statement query(db, "SELECT m.receiverID,        u.username AS sender_username,         u2.username AS receiver_username,         m.message,        m.created_at FROM messages m JOIN users u ON m.senderID = u.id JOIN users u2 ON m.receiverID = u2.id WHERE (m.senderID = ? OR m.receiverID = ?) AND NOT EXISTS (     SELECT 1     FROM messages m2     WHERE (             (m2.senderID = m.senderID AND m2.receiverID = m.receiverID)          OR (m2.senderID = m.receiverID AND m2.receiverID = m.senderID)           )        AND m2.created_at > m.created_at ) GROUP BY CASE WHEN m.senderID < m.receiverID THEN m.senderID || '-' || m.receiverID               ELSE m.receiverID || '-' || m.senderID END ORDER BY m.created_at DESC;");
+            query.bind(1, userId.value());
+            query.bind(2, userId.value());
+        
+            std::vector<crow::json::wvalue> chats;
+            try {
+                while (query.executeStep()) {
+                    crow::json::wvalue chat;
+                    chat["id"] = query.getColumn(0).getInt();
+                    chat["senderName"] = query.getColumn(1).getText();
+                    chat["recipientName"] = query.getColumn(2).getText();
+                    chat["message"] = query.getColumn(3).getText();
+                    chat["created_at"] = query.getColumn(4).getText();
+                    chats.push_back(chat);
+                }
+            } catch (const std::exception& e) {
+                CROW_LOG_ERROR << "Error executing SQL query: " << e.what();
+                return crow::response(500);
+            }
+
+            crow::json::wvalue response = std::move(chats);
+
+            return crow::response(response);
+        });
+
+        CROW_ROUTE(app, "/chats/<int>")
         ([&db](const crow::request& req, int recipientId) {
             const auto& headers = req.headers;
             auto authHeader = headers.find("Authorization");
