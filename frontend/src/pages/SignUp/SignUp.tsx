@@ -73,7 +73,6 @@ export const SignUp = () => {
             if (response.ok) {
                 const data = await response.json();
                 let token = data.token;
-                token = token.replace("Basic ", ""); // Adjusting based on token type (Bearer assumed)
 
                 localStorage.setItem("authToken", token);
                 navigate("/chat");

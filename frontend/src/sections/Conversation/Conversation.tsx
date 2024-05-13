@@ -48,8 +48,11 @@ export const Conversation = () => {
         __TYPE__: "message",
         token: localStorage.getItem("authToken"),
         message: (document.getElementById("message") as HTMLInputElement).value,
-        recipientId: parseInt((document.getElementById("recipientId") as HTMLInputElement).value)
+        recipientId: parseInt((document.getElementById("recipientId") as HTMLInputElement).value),
+        senderId: parseInt(localStorage.getItem("userID") || "0", 10)
       };
+
+      setLog(prevLog => [...prevLog, messageObject as Message]);
       sendJsonMessage(messageObject);
     } else {
       console.error("WebSocket connection not open.");
@@ -64,7 +67,11 @@ export const Conversation = () => {
 
         {
           log.map(message => {
-            if (message.senderId == 1) // reikia patvarkyt, kad tai yra lygu logged in userio id.
+            console.log("Sender ID:", message.senderId);
+            const isSentByUser = message.senderId === parseInt(localStorage.getItem("userID") || "0", 10);
+            console.log("Is sent by user:", isSentByUser);
+
+            if (isSentByUser) // reikia patvarkyt, kad tai yra lygu logged in userio id.
               return <UsersMessage timeAgo="Now" message={message.message} />
             else
               return <ResponseMessage username="Eduardo Burbulito" timeAgo="Now" message={message.message} />

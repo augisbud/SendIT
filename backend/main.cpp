@@ -169,6 +169,7 @@ int main() {
 
             crow::json::wvalue response;
             response["token"] = token;
+            response["userID"] = userId.value();
 
             return crow::response(response);
         });
