@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { FriendInfo } from "../../components/FriendInfo/FriendInfo";
-import { MessageField } from "../../components/MessageField/MessageField";
 import { ResponseMessage } from "../../components/ResponseMessage/ResponseMessage";
 import { UsersMessage } from "../../components/UsersMessage/UsersMessage";
 import styles from "./Conversation.module.scss";
@@ -11,8 +10,14 @@ type MessageData = {
   [key: string]: any;
 };
 
+type Message = {
+  message: string,
+  recipientId: number,
+  senderId: number
+}
+
 export const Conversation = () => {
-  const [log, setLog] = useState<MessageData[]>([]);
+  const [log, setLog] = useState<Message[]>([]);
 
   const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(
     "ws://localhost:8080/ws",
@@ -23,8 +28,6 @@ export const Conversation = () => {
   );
 
   useEffect(() => {
-    const queryParams = new URLSearchParams(window.location.search);
-
     if (readyState === ReadyState.OPEN) {
       sendJsonMessage({
         __TYPE__: "subscribe",
@@ -35,25 +38,17 @@ export const Conversation = () => {
 
   useEffect(() => {
     if (lastJsonMessage) {
-      setLog((prevLog) => [...prevLog, { ...lastJsonMessage, id: Date.now() }]);
+      setLog(l => [...l, lastJsonMessage as Message])
     }
   }, [lastJsonMessage]);
-
-//   useEffect(() => {
-//     if (lastJsonMessage) {
-//       setLog((prevLog) => [...prevLog, lastJsonMessage]);
-//     }
-//   }, [lastJsonMessage]);
 
   const handleClick = () => {
     if (readyState === ReadyState.OPEN) {
       const messageObject: MessageData = {
         __TYPE__: "message",
+        token: localStorage.getItem("authToken"),
         message: (document.getElementById("message") as HTMLInputElement).value,
-        recipientId: parseInt(
-          (document.getElementById("recipientId") as HTMLInputElement).value
-        ),
-        sentByUser: true,
+        recipientId: parseInt((document.getElementById("recipientId") as HTMLInputElement).value)
       };
       sendJsonMessage(messageObject);
     } else {
@@ -67,40 +62,14 @@ export const Conversation = () => {
       <div className={styles.messagesContainer}>
         <input type="number" id="recipientId" defaultValue="Hello, World!" />
 
-        {log.map(message => {
-          if (message.sentByUser) {
-            return (
-              <UsersMessage
-                timeAgo="Now"
-                message={message.message}
-              />
-            );
-          } else {
-            return (
-              <ResponseMessage
-                username="Eduardo Burbulito"
-                timeAgo="Now"
-                message={message.message}
-              />
-            );
-          }
-        })}
-        {/* <pre>{log}</pre> */}
-
-        {/* <ResponseMessage username="Eduardo Burbulito" timeAgo="15m" message="Wassup seniuk" />
-                <UsersMessage timeAgo="10m" message="Zdorovenko, kaip gyvenat?"/>
-                <UsersMessage timeAgo="10m" message="Zdorovenko, kaip gyvenat?"/>
-                <UsersMessage timeAgo="10m" message="Zdorovenko, kaip gyvenat?"/>
-                <UsersMessage timeAgo="10m" message="Zdorovenko, kaip gyvenat?"/>
-                <UsersMessage timeAgo="10m" message="Zdorovenko, kaip gyvenat?"/>
-                <UsersMessage timeAgo="10m" message="Zdorovenko, kaip gyvenat?"/>
-                <UsersMessage timeAgo="10m" message="Zdorovenko, kaip gyvenat?"/>
-                <UsersMessage timeAgo="10m" message="Zdorovenko, kaip gyvenat?"/>
-                <UsersMessage timeAgo="10m" message="Zdorovenko, kaip gyvenat?"/>
-                <UsersMessage timeAgo="10m" message="Zdorovenko, kaip gyvenat?"/>
-                <UsersMessage timeAgo="10m" message="Zdorovenko, kaip gyvenat?"/>
-                <UsersMessage timeAgo="10m" message="Zdorovenko, kaip gyvenat?"/>
-                <UsersMessage timeAgo="10m" message="Zdorovenko, kaip gyvenat?"/> */}
+        {
+          log.map(message => {
+            if (message.senderId == 1) // reikia patvarkyt, kad tai yra lygu logged in userio id.
+              return <UsersMessage timeAgo="Now" message={message.message} />
+            else
+              return <ResponseMessage username="Eduardo Burbulito" timeAgo="Now" message={message.message} />
+          })
+        }
       </div>
       <div className={styles.sendContainer}>
         <input type="text" id="message" placeholder="Aa" />
