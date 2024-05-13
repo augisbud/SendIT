@@ -84,7 +84,7 @@ const handleSubmit = async (inputData : Fields, setErrors : React.Dispatch<React
             localStorage.setItem("authToken", data.token);
             localStorage.setItem('userID', data.userID);
 
-            navigate("/chat");
+            navigate("/chats/1");
         } else {
             const data = await response.json();
 

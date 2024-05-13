@@ -6,6 +6,7 @@ import { UsersMessage } from "../../components/UsersMessage/UsersMessage";
 import styles from "./Conversation.module.scss";
 import { Button } from "../../components/Button/Button";
 import { Message } from "../../pages/Chat/Chat";
+import { useParams } from "react-router-dom";
 
 type MessageData = {
   [key: string]: any;
@@ -13,9 +14,10 @@ type MessageData = {
 
 export const Conversation = ({ sendMessage, readyState, lastJsonMessage }: { sendMessage: (message: MessageData) => void, readyState: ReadyState, lastJsonMessage: Message | null }) => {
   const [log, setLog] = useState<Message[]>([]);
+  const recipientId = useParams().id;
   const userID = localStorage.getItem("userID");
 
-  if (userID === null)
+  if (userID === null || recipientId === undefined)
     return null;
 
   useEffect(() => {
@@ -30,7 +32,7 @@ export const Conversation = ({ sendMessage, readyState, lastJsonMessage }: { sen
         __TYPE__: "message",
         token: localStorage.getItem("authToken"),
         message: (document.getElementById("message") as HTMLInputElement).value,
-        recipientId: parseInt((document.getElementById("recipientId") as HTMLInputElement).value),
+        recipientId: parseInt(recipientId),
         senderId: parseInt(userID),
       };
 
@@ -47,7 +49,6 @@ export const Conversation = ({ sendMessage, readyState, lastJsonMessage }: { sen
     <div className={styles.convSection}>
       <FriendInfo name="Eduardo Burbulito" />
       <div className={styles.messagesContainer}>
-        <input type="number" id="recipientId" defaultValue="Hello, World!" />
         {
           log.map((message) => {
             if (message.senderId === parseInt(userID))
