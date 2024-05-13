@@ -84,6 +84,8 @@ void sendMessage(SQLite::Database& db, crow::json::rvalue data) {
     insertQuery.exec();
 
     crow::json::wvalue response;
+    response["senderId"] = userId.value();
+    response["recipientId"] = static_cast<int>(data["recipientId"]);
     response["message"] = data["message"];
 
     for (auto & c : connections)
