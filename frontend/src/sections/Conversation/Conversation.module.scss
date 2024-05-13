@@ -1,8 +1,9 @@
 .convSection {
-    background-color: #F2F7F8;
+    background-color: #f2f7f8;
     padding: 1rem;
     display: flex;
     flex-direction: column;
+    max-height: 100vh;
 }
 
 .messagesContainer {
@@ -17,7 +18,7 @@
     margin-top: 1rem;
     display: flex;
     flex-direction: row;
-    
+
     gap: 15px;
     position: relative;
 
@@ -26,7 +27,7 @@
         width: 100%;
         padding: 1rem;
         border-radius: 100vw;
-        border: 3px solid #E7E7E7;
+        border: 3px solid #e7e7e7;
         padding-left: 40px;
     }
 }
@@ -38,4 +39,16 @@
     transform: translateY(-50%);
     width: 24px;
     height: 24px;
+}
+
+.message {
+    transition: opacity 0.3s ease;
+}
+
+.new-message {
+    opacity: 0;
+}
+
+.new-message.active {
+    opacity: 1;
 }
