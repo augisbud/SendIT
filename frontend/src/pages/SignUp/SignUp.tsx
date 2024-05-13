@@ -7,7 +7,6 @@ import { Button } from '../../components/Button/Button';
 
 interface Fields {
     username?: string;
-    email?: string;
     password?: string;
     confirmPassword?: string;
 }
@@ -24,14 +23,6 @@ export const SignUp = () => {
 
         if (!inputData.username) {
             newErrors.username = "Username is required";
-            isValid = false;
-        }
-
-        if (!inputData.email) {
-            newErrors.email = "Email is required";
-            isValid = false;
-        } else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(inputData.email)) {
-            newErrors.email = "Email is invalid";
             isValid = false;
         }
 
@@ -101,14 +92,6 @@ export const SignUp = () => {
                         value={inputData.username || ''}
                         error={errors.username}
                         onChange={(e) => setInputData({ ...inputData, username: e.target.value })}
-                    />
-                    <InputField
-                        type="email"
-                        name="email"
-                        label='Email address'
-                        value={inputData.email || ''}
-                        error={errors.email}
-                        onChange={(e) => setInputData({ ...inputData, email: e.target.value })}
                     />
                     <InputField
                         type="password"

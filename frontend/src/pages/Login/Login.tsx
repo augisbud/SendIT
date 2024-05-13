@@ -6,7 +6,7 @@ import { InputField } from '../../components/InputField/InputField';
 import { Button } from '../../components/Button/Button';
 
 interface Fields {
-    email?: string;
+    username?: string;
     password?: string;
 }
 
@@ -16,23 +16,16 @@ export const Login = () => {
     const [inputData, setInputData] = useState<Fields>({});
     const [errors, setErrors] = useState<Fields>({});
 
-    const validateEmail = (email: string) => {
-        return email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
-    };
-
     const validatePassword = (password: string) => {
-        return password.length >= 8;
+        return password.length >= 1;
     };
 
     const validateFields = () => {
         const newErrors: Fields = {};
         let isValid = true;
 
-        if (!inputData.email) {
-            newErrors.email = "Email address is required";
-            isValid = false;
-        } else if (!validateEmail(inputData.email)) {
-            newErrors.email = "Please enter a valid email address.";
+        if (!inputData.username) {
+            newErrors.username = "Username is required";
             isValid = false;
         }
 
@@ -48,19 +41,36 @@ export const Login = () => {
         return isValid;
     };
 
-    const handleSubmit = () => {
-        if (validateFields()) {
-            // Placeholder for authentication logic
-            // Assume the function to store JWT and navigate would be here
-            navigate("/chat");
-        } else {
-            alert("Please correct the highlighted errors.");
+    const handleSubmit = async () => {
+        if (!validateFields()) {
+            alert("Please correct the highlighted errors before submitting.");
+            return;
         }
-    };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setInputData(prev => ({ ...prev, [name]: value }));
+        try {
+            const response = await fetch('http://localhost:8080/login', {
+                method: 'POST',
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(inputData)
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                let token = data.token;
+                token = token.replace("Basic ", ""); // Adjusting based on token type (Bearer assumed)
+
+                localStorage.setItem("authToken", token);
+                navigate("/chat");
+            } else {
+                const data = await response.json();
+                alert(data.message);
+            }
+        } catch (error) {
+            alert('An error occurred while registering. Please try again later.');
+        }
     };
 
     return (
@@ -72,12 +82,12 @@ export const Login = () => {
                 </div>
                 <div>
                     <InputField
-                        type="email"
-                        name="email"
-                        label="Email address"
-                        value={inputData.email || ''}
-                        error={errors.email}
-                        onChange={handleChange}
+                        type="text"
+                        name="username"
+                        label='Username'
+                        value={inputData.username || ''}
+                        error={errors.username}
+                        onChange={(e) => setInputData({ ...inputData, username: e.target.value })}
                     />
                     <InputField
                         type="password"
@@ -85,7 +95,7 @@ export const Login = () => {
                         label="Password"
                         value={inputData.password || ''}
                         error={errors.password}
-                        onChange={handleChange}
+                        onChange={(e) => setInputData({ ...inputData, password: e.target.value })}
                     />
                 </div>
                 <div>
