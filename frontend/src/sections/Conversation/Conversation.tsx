@@ -5,35 +5,24 @@ import { ResponseMessage } from "../../components/ResponseMessage/ResponseMessag
 import { UsersMessage } from "../../components/UsersMessage/UsersMessage";
 import styles from "./Conversation.module.scss";
 import { Button } from "../../components/Button/Button";
+import { Message } from "../../pages/Chat/Chat";
 
 type MessageData = {
   [key: string]: any;
 };
 
-type Message = {
-  message: string;
-  recipientId: number;
-  senderId: number;
-};
-
-type Props = {
-  websocket: (message: MessageData) => void;
-  readyState: ReadyState;
-  lastJsonMes: Message | null;
-};
-
-export const Conversation: React.FC<Props> = ({
-  websocket,
-  readyState,
-  lastJsonMes,
-}) => {
+export const Conversation = ({ sendMessage, readyState, lastJsonMessage }: { sendMessage: (message: MessageData) => void, readyState: ReadyState, lastJsonMessage: Message | null }) => {
   const [log, setLog] = useState<Message[]>([]);
+  const userID = localStorage.getItem("userID");
+
+  if (userID === null)
+    return null;
 
   useEffect(() => {
-    if (lastJsonMes) {
-      setLog((l) => [...l, lastJsonMes]);
+    if (lastJsonMessage) {
+      setLog((l) => [...l, lastJsonMessage]);
     }
-  }, [lastJsonMes]);
+  }, [lastJsonMessage]);
 
   const handleClick = () => {
     if (readyState === ReadyState.OPEN) {
@@ -41,14 +30,14 @@ export const Conversation: React.FC<Props> = ({
         __TYPE__: "message",
         token: localStorage.getItem("authToken"),
         message: (document.getElementById("message") as HTMLInputElement).value,
-        recipientId: parseInt(
-          (document.getElementById("recipientId") as HTMLInputElement).value
-        ),
-        senderId: parseInt(localStorage.getItem("userID") || "0", 10),
+        recipientId: parseInt((document.getElementById("recipientId") as HTMLInputElement).value),
+        senderId: parseInt(userID),
       };
 
+      console.log(messageObject);
+
       setLog((prevLog) => [...prevLog, messageObject as Message]);
-      websocket(messageObject);
+      sendMessage(messageObject);
     } else {
       console.error("WebSocket connection not open.");
     }
@@ -59,31 +48,19 @@ export const Conversation: React.FC<Props> = ({
       <FriendInfo name="Eduardo Burbulito" />
       <div className={styles.messagesContainer}>
         <input type="number" id="recipientId" defaultValue="Hello, World!" />
-
-        {log.map((message) => {
-          const isSentByUser =
-            message.senderId ===
-            parseInt(localStorage.getItem("userID") || "0", 10);
-
-          if (isSentByUser)
-            return <UsersMessage timeAgo="Now" message={message.message} />;
-          else
-            return (
-              <ResponseMessage
-                username="Eduardo Burbulito"
-                timeAgo="Now"
-                message={message.message}
-              />
-            );
-        })}
+        {
+          log.map((message) => {
+            if (message.senderId === parseInt(userID))
+              return <UsersMessage key={message.id} timeAgo={message.created_at} message={message.message} />;
+            else
+              return <ResponseMessage username={message.username} timeAgo={message.created_at} message={message.message} />;
+          })
+        }
       </div>
       <div className={styles.sendContainer}>
         <input type="text" id="message" placeholder="Aa" />
 
-        <Button
-          style={{ padding: "0.5rem 4.5rem", fontSize: "18px" }}
-          onClick={handleClick}
-        >
+        <Button style={{ padding: "0.5rem 4.5rem", fontSize: "18px" }} onClick={handleClick}>
           Send Message
         </Button>
       </div>

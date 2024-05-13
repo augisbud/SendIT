@@ -5,38 +5,40 @@ import { Inbox } from "../../sections/Inbox/Inbox";
 import { Conversation } from "../../sections/Conversation/Conversation";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 
-type Message = {
-    message: string;
-    recipientId: number;
+export type Message = {
+    id: string;
     senderId: number;
-  };
+    username: string;
+    message: string;
+    created_at: string;
+};
 
 export const Chat = () => {
-  const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(
-    "ws://localhost:8080/ws",
-    {
-      share: false,
-      shouldReconnect: () => true,
-    }
-  );
+    const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(
+        "ws://localhost:8080/ws",
+        {
+            share: false,
+            shouldReconnect: () => true,
+        }
+    );
 
-  useEffect(() => {
-    if (readyState === ReadyState.OPEN) {
-      sendJsonMessage({
-        __TYPE__: "subscribe",
-        token: localStorage.getItem("authToken"),
-      });
-    }
-  }, [readyState, sendJsonMessage]);
+    useEffect(() => {
+        if (readyState === ReadyState.OPEN) {
+            sendJsonMessage({
+                __TYPE__: "subscribe",
+                token: localStorage.getItem("authToken"),
+            });
+        }
+    }, [readyState, sendJsonMessage]);
 
-  return (
-    <main>
-      <VerticalNavbar />
+    return (
+        <main>
+            <VerticalNavbar />
 
-      <div className={styles.chatWrapper}>
-        <Inbox />
-        <Conversation websocket={sendJsonMessage} readyState={readyState} lastJsonMes={lastJsonMessage as Message | null}/>
-      </div>
-    </main>
-  );
+            <div className={styles.chatWrapper}>
+                <Inbox />
+                <Conversation sendMessage={sendJsonMessage} readyState={readyState} lastJsonMessage={lastJsonMessage as Message | null} />
+            </div>
+        </main>
+    );
 };
