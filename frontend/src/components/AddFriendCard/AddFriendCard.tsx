@@ -2,13 +2,18 @@ import styles from "./AddFriendCard.module.scss";
 import profile from "../../assets/profile.svg";
 import { Button } from "../Button/Button";
 
-export const AddFriendCard = () => {
+interface AddFriendCardProps {
+    username: string;
+    id: number;
+}
+
+export const AddFriendCard = ({ username, id }: AddFriendCardProps) => {
     return (
-        <div className={styles.cardArea}>
+        <div className={styles.cardArea} key={id}>
             <div className={styles.cardDesc}>
                 <img src={profile} alt="profile" />
                 <div className={styles.cardHeading}>
-                    <h4>Eduardo Burbulito</h4>
+                    <h4>{username}</h4>
                 </div>
             </div>
             <div className={styles.buttonArea}>

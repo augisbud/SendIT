@@ -6,7 +6,7 @@ import { InboxCard } from "../../components/InboxCard/InboxCard";
 export const Inbox = () => {
     return (
         <div className={styles.inboxSection}>
-            <SearchBar type="text" name="search-bar"/>
+            <SearchBar name="search-bar"/>
             
             <div className={styles.inboxFunctionsArea}>
                 <h3>Inbox</h3>
