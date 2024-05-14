@@ -45,7 +45,7 @@ void initiateConnection(SQLite::Database& db, crow::json::rvalue data, crow::web
     if(!data.has("token") || data["token"].t() != crow::json::type::String)
         return;
 
-    auto userId = getUserId(db, static_cast<std::string>(data["token"]));
+    auto userId = getUserId(db, static_cast<std::string>(data["token"]).substr(6));
     if(!userId.has_value())
         return;
 
@@ -73,7 +73,7 @@ void sendMessage(SQLite::Database& db, crow::json::rvalue data) {
     if(!data.has("message") || data["message"].t() != crow::json::type::String)
         return;
 
-    auto userId = getUserId(db, static_cast<std::string>(data["token"]));
+    auto userId = getUserId(db, static_cast<std::string>(data["token"]).substr(6));
     if(!userId.has_value())
         return;
 
@@ -83,14 +83,21 @@ void sendMessage(SQLite::Database& db, crow::json::rvalue data) {
     insertQuery.bind(3, static_cast<std::string>(data["message"]));
     insertQuery.exec();
 
-    crow::json::wvalue response;
-    response["senderId"] = userId.value();
-    response["recipientId"] = static_cast<int>(data["recipientId"]);
-    response["message"] = data["message"];
+    SQLite::Statement query(db, "SELECT messages.id, messages.senderID, users.username, messages.message, messages.created_at FROM messages INNER JOIN users ON messages.senderID = users.id WHERE messages.id = ?");
+    query.bind(1, db.getLastInsertRowid());
 
-    for (auto & c : connections)
-        if(c.User && c.UserId == static_cast<int>(data["recipientId"]))
-            c.User->send_text(response.dump());
+    if(query.executeStep()) {
+        crow::json::wvalue chat;
+        chat["id"] = query.getColumn(0).getInt();
+        chat["senderId"] = query.getColumn(1).getInt();
+        chat["username"] = query.getColumn(2).getText();
+        chat["message"] = query.getColumn(3).getText();
+        chat["created_at"] = query.getColumn(4).getText();
+        
+        for (auto & c : connections)
+            if(c.User && c.UserId == static_cast<int>(data["recipientId"]))
+                c.User->send_text(chat.dump());
+    }    
 }
 
 int main() {
@@ -169,6 +176,7 @@ int main() {
 
             crow::json::wvalue response;
             response["token"] = token;
+            response["userID"] = userId.value();
 
             return crow::response(response);
         });

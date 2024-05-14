@@ -14,7 +14,7 @@ export const App = () => (
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
-      <Route path="/chat" element={<Chat />}/>
+      <Route path="/chats/:id" element={<Chat />}/>
       <Route path="/add-friend" element={<AddFriend />}/>
       <Route path="/settings" element={<Settings />}/>
     </Routes>
