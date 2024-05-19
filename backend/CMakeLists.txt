@@ -9,10 +9,9 @@ include_directories(external/Asio)
 include_directories(external/Crow)
 add_subdirectory(external/SQLiteCpp)
 
-add_executable(executable 
-                main.cpp 
-                Connection.cpp 
-                DatabaseService.cpp 
-                TokenUtilities.cpp 
-                WebSocketService.cpp)
+add_executable(executable main.cpp 
+                src/Connection.cpp 
+                src/DatabaseService.cpp 
+                src/TokenUtilities.cpp 
+                src/WebSocketService.cpp)
 target_link_libraries(executable SQLiteCpp)

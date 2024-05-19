@@ -1,9 +1,9 @@
 #include <iostream>
 #include <iomanip>
 
-#include "TokenUtilities.h"
-#include "DatabaseService.h"
-#include "WebSocketService.h"
+#include "src/TokenUtilities.h"
+#include "src/DatabaseService.h"
+#include "src/WebSocketService.h"
 
 int main() {
     TokenUtilities* tokenUtil = new TokenUtilities();
