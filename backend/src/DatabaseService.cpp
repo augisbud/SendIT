@@ -1,6 +1,12 @@
 #include "DatabaseService.h"
 
-std::optional<int> DatabaseService::getUserID(SQLite::Database& db, std::string token) {
+DatabaseService::DatabaseService(SQLite::Database& db) : db(db) { }
+
+SQLite::Database& DatabaseService::getDb() const {
+    return db;
+}
+
+std::optional<int> DatabaseService::getUserID(std::string token) {
     std::string credentials = crow::utility::base64decode(token, token.size());
 
     size_t found = credentials.find(':');
@@ -17,12 +23,12 @@ std::optional<int> DatabaseService::getUserID(SQLite::Database& db, std::string 
         return std::nullopt;
 }
 
-void DatabaseService::createTables(SQLite::Database& db) {
+void DatabaseService::createTables() {
     db.exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT NOT NULL, password TEXT NOT NULL)");
     db.exec("CREATE TABLE IF NOT EXISTS messages (id INTEGER PRIMARY KEY, senderID INTEGER, receiverID INTEGER, message TEXT NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
 }
 
-void DatabaseService::insertMessage(SQLite::Database& db, crow::json::rvalue data, std::optional<int> userId) {
+void DatabaseService::insertMessage(crow::json::rvalue data, std::optional<int> userId) {
     SQLite::Statement insertQuery(db, "INSERT INTO messages (senderID, receiverID, message) VALUES (?, ?, ?)");
     insertQuery.bind(1, userId.value());
     insertQuery.bind(2, static_cast<int>(data["recipientId"]));

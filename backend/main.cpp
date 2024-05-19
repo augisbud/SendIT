@@ -6,13 +6,13 @@
 #include "src/WebSocketService.h"
 
 int main() {
+    SQLite::Database db("main.db3", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
     TokenUtilities* tokenUtil = new TokenUtilities();
-    DatabaseService* dbService = new DatabaseService();
+    DatabaseService* dbService = new DatabaseService(db);
     WebSocketService* wsService = new WebSocketService();
 
     try {
-        SQLite::Database db("main.db3", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
-        dbService->createTables(db);
+        dbService->createTables();
 
         crow::App<crow::CORSHandler> app;
         app.loglevel(crow::LogLevel::Warning);
@@ -78,7 +78,7 @@ int main() {
 
             std::string token = tokenUtil->generateToken(json["username"].s(), json["password"].s());
 
-            auto userId = dbService->getUserID(db, token.substr(6));
+            auto userId = dbService->getUserID(token.substr(6));
             if (!userId.has_value())
                 return crow::response(403);
 
@@ -96,7 +96,7 @@ int main() {
             if (authHeader == headers.end())
                 return crow::response(403);
 
-            auto userId = dbService->getUserID(db, authHeader->second.substr(6));
+            auto userId = dbService->getUserID(authHeader->second.substr(6));
             if (!userId.has_value())
                 return crow::response(403);
 
@@ -128,7 +128,7 @@ int main() {
             if (authHeader == headers.end())
                 return crow::response(403);
 
-            auto userId = dbService->getUserID(db, authHeader->second.substr(6));
+            auto userId = dbService->getUserID(authHeader->second.substr(6));
             if (!userId.has_value())
                 return crow::response(403);
 
@@ -164,7 +164,7 @@ int main() {
             if (authHeader == headers.end())
                 return crow::response(403);
 
-            auto userId = dbService->getUserID(db, authHeader->second.substr(6));
+            auto userId = dbService->getUserID(authHeader->second.substr(6));
             if (!userId.has_value())
                 return crow::response(403);
 
@@ -203,9 +203,9 @@ int main() {
                 return;
 
             if (dataJson["__TYPE__"] == "subscribe")
-                wsService->initiateConnection(db, dataJson, &conn, dbService);
+                wsService->initiateConnection(dataJson, &conn, dbService);
             else if (dataJson["__TYPE__"] == "message")
-                wsService->sendMessage(db, dataJson, dbService);
+                wsService->sendMessage(dataJson, dbService);
         });
 
         app.port(8080).multithreaded().run();

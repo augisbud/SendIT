@@ -6,10 +6,16 @@
 #include "crow.h"
 
 class DatabaseService {
+private:
+    SQLite::Database& db;
 public:
-    std::optional<int> getUserID(SQLite::Database& db, std::string token);
-    void createTables(SQLite::Database& db);
-    void insertMessage(SQLite::Database& db, crow::json::rvalue data, std::optional<int> userId);
+    DatabaseService(SQLite::Database& db);
+
+    SQLite::Database& getDb() const;
+
+    std::optional<int> getUserID(std::string token);
+    void createTables();
+    void insertMessage(crow::json::rvalue data, std::optional<int> userId);
 };
 
 #endif

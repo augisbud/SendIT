@@ -1,10 +1,10 @@
 #include "WebSocketService.h"
 
-void WebSocketService::initiateConnection(SQLite::Database& db, crow::json::rvalue data, crow::websocket::connection* conn, DatabaseService* dbService) {
+void WebSocketService::initiateConnection(crow::json::rvalue data, crow::websocket::connection* conn, DatabaseService* dbService) {
     if (!data.has("token") || data["token"].t() != crow::json::type::String)
         return;
 
-    auto userId = dbService->getUserID(db, static_cast<std::string>(data["token"]).substr(6));
+    auto userId = dbService->getUserID(static_cast<std::string>(data["token"]).substr(6));
     if (!userId.has_value())
         return;
 
@@ -24,7 +24,7 @@ void WebSocketService::initiateConnection(SQLite::Database& db, crow::json::rval
     }
 }
 
-void WebSocketService::sendMessage(SQLite::Database& db, crow::json::rvalue data, DatabaseService* dbService) {
+void WebSocketService::sendMessage(crow::json::rvalue data, DatabaseService* dbService) {
     if (!data.has("token") || data["token"].t() != crow::json::type::String)
         return;
     if (!data.has("recipientId") || data["recipientId"].t() != crow::json::type::Number)
@@ -32,14 +32,14 @@ void WebSocketService::sendMessage(SQLite::Database& db, crow::json::rvalue data
     if (!data.has("message") || data["message"].t() != crow::json::type::String)
         return;
 
-    auto userId = dbService->getUserID(db, static_cast<std::string>(data["token"]).substr(6));
+    auto userId = dbService->getUserID(static_cast<std::string>(data["token"]).substr(6));
     if (!userId.has_value())
         return;
 
-    dbService->insertMessage(db, data, userId);
+    dbService->insertMessage(data, userId);
 
-    SQLite::Statement query(db, "SELECT messages.id, messages.senderID, users.username, messages.message, messages.created_at FROM messages INNER JOIN users ON messages.senderID = users.id WHERE messages.id = ?");
-    query.bind(1, db.getLastInsertRowid());
+    SQLite::Statement query(dbService->getDb(), "SELECT messages.id, messages.senderID, users.username, messages.message, messages.created_at FROM messages INNER JOIN users ON messages.senderID = users.id WHERE messages.id = ?");
+    query.bind(1, dbService->getDb().getLastInsertRowid());
 
     if (query.executeStep()) {
         crow::json::wvalue chat;
