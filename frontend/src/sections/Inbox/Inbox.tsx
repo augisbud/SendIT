@@ -5,7 +5,7 @@ import { Suggestions } from "../../components/Suggestions/Suggestions";
 import axios from 'axios';
 
 interface Friend {
-    senderID: string;
+    senderID: number;
     id: number;
     created_at: string;
     message: string;
@@ -45,9 +45,9 @@ export const Inbox = () => {
             setFilteredChats(chats); // Show all chats if search is empty
         } else {
             // Doesn't work, needs to be fixed
-            setFilteredChats(chats.filter(chat =>
-                chat.senderID.toLowerCase().includes(searchValue.toLowerCase())
-            ));
+            // setFilteredChats(chats.filter(chat =>
+            //     chat.senderID.toLowerCase().includes(searchValue.toLowerCase())
+            // ));
         }
     }, [searchValue, chats]);
 
