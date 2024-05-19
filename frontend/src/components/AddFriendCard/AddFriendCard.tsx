@@ -1,6 +1,7 @@
 import styles from "./AddFriendCard.module.scss";
-import profile from "../../assets/profile.svg";
+import profile from "../../assets/profile.jpg";
 import { Button } from "../Button/Button";
+import { useNavigate } from 'react-router-dom';
 
 interface AddFriendCardProps {
     username: string;
@@ -8,6 +9,12 @@ interface AddFriendCardProps {
 }
 
 export const AddFriendCard = ({ username, id }: AddFriendCardProps) => {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate(`/chats/${id}`);
+    }
+
     return (
         <div className={styles.cardArea} key={id}>
             <div className={styles.cardDesc}>
@@ -17,8 +24,8 @@ export const AddFriendCard = ({ username, id }: AddFriendCardProps) => {
                 </div>
             </div>
             <div className={styles.buttonArea}>
-                <Button style={{ padding: "0.5rem", fontSize: "18px" }}>
-                    Add friend
+                <Button style={{ padding: "0.5rem", fontSize: "18px" }} onClick={handleClick}>
+                    Chat now
                 </Button>
             </div>
         </div>

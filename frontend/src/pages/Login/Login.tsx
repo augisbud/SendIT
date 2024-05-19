@@ -30,7 +30,7 @@ export const Login = () => {
                         label="Username"
                         value={inputData.username || ''}
                         error={errors.username}
-                        onChange={(e) => handleChange(e, setInputData)}
+                        onChange={ (e) => handleChange(e, setInputData) }
                     />
                     <InputField
                         type="password"
@@ -38,13 +38,13 @@ export const Login = () => {
                         label="Password"
                         value={inputData.password || ''}
                         error={errors.password}
-                        onChange={(e) => handleChange(e, setInputData)}
+                        onChange={ (e) => handleChange(e, setInputData) }
                     />
                 </div>
                 <div>
                     <Button
                         style={{ padding: "0.5rem 0", fontSize: "18px" }}
-                        onClick={() => handleSubmit(inputData, setErrors, navigate)}
+                        onClick={ () => handleSubmit(inputData, setErrors, navigate) }
                     >
                         Login
                     </Button>
@@ -57,13 +57,14 @@ export const Login = () => {
     );
 };
 
-const handleChange = (e: React.ChangeEvent<HTMLInputElement>, setInputData: React.Dispatch<React.SetStateAction<Fields>>) => {
+const handleChange = (e: React.ChangeEvent<HTMLInputElement>, setInputData : React.Dispatch<React.SetStateAction<Fields>>) => {
     const { name, value } = e.target;
     setInputData(prev => ({ ...prev, [name]: value }));
 };
 
-const handleSubmit = async (inputData: Fields, setErrors: React.Dispatch<React.SetStateAction<Fields>>, navigate: NavigateFunction) => {
+const handleSubmit = async (inputData : Fields, setErrors : React.Dispatch<React.SetStateAction<Fields>>, navigate : NavigateFunction) => {
     if (!validateFields(inputData, setErrors)) {
+        alert("Please correct the highlighted errors before submitting.");
         return;
     }
 
@@ -83,24 +84,25 @@ const handleSubmit = async (inputData: Fields, setErrors: React.Dispatch<React.S
             localStorage.setItem("authToken", data.token);
             localStorage.setItem('userID', data.userID);
 
-            navigate("/chats/1");
+            navigate(`/chats/${data.userID}`);
         } else {
             const data = await response.json();
-            setErrors(prev => ({ ...prev, password: data.message }));
+
+            console.error(data.message);
         }
     } catch (error) {
-        console.error('An error occurred while logging in. Please try again later.');
+        console.error('An error occurred while registering. Please try again later.');
     }
 };
 
-const validateFields = (inputData: Fields, setErrors: React.Dispatch<React.SetStateAction<Fields>>) => {
+const validateFields = (inputData : Fields, setErrors : React.Dispatch<React.SetStateAction<Fields>>) => {
     const newErrors: Fields = {};
     let isValid = true;
 
     if (!inputData.username) {
         newErrors.username = "Username is required";
         isValid = false;
-    }
+    } 
 
     if (!inputData.password) {
         newErrors.password = "Password is required";
@@ -115,5 +117,5 @@ const validateFields = (inputData: Fields, setErrors: React.Dispatch<React.SetSt
 };
 
 const validatePassword = (password: string) => {
-    return password.length >= 8;
+    return password.length >= 1;
 };

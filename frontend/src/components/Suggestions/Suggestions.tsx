@@ -8,7 +8,7 @@ interface User {
 }
 
 interface Friend {
-    senderID: string;
+    senderID: number;
     id: number;
     created_at: string;
     message: string;
@@ -32,8 +32,8 @@ export const Suggestions = ({ suggestions, name }: SuggestionsProps) => {
             {name === 'find-chat' && (suggestions as Friend[]).map((suggestion) => (
                 <InboxCard 
                     key={suggestion.id} 
-                    id={suggestion.id} 
-                    username={suggestion.senderID} 
+                    id={suggestion.senderID} 
+                    username={"KAZKOKS NICKAS"} 
                     message={suggestion.message} 
                     created_at={suggestion.created_at} 
                 />

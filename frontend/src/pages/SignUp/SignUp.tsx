@@ -94,7 +94,7 @@ const handleRegister = async (inputData : Fields, setErrors : React.Dispatch<Rea
             const data = await response.json();
 
             localStorage.setItem("authToken", data.token);
-            navigate("/chat");
+            navigate("/login");
         } else {
             const data = await response.json();
 

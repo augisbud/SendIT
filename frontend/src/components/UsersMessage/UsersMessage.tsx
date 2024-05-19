@@ -1,5 +1,5 @@
 import styles from "./UsersMessage.module.scss";
-import profilePic from "../../assets/profile.svg";
+import profilePic from "../../assets/profile.jpg";
 
 interface UsersMessageProps {
     message: string;
