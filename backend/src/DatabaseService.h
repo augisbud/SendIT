@@ -16,6 +16,7 @@ public:
     std::optional<int> getUserID(std::string token);
     void createTables();
     void insertMessage(crow::json::rvalue data, std::optional<int> userId);
+    SQLite::Statement setQuery();
 };
 
 #endif

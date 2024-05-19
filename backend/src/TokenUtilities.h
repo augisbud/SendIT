@@ -2,6 +2,7 @@
 #define TOKENUTILITIES_H
 
 #include "crow.h"
+#include <array>
 
 class TokenUtilities {
 public:

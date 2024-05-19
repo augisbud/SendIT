@@ -37,9 +37,7 @@ void WebSocketService::sendMessage(crow::json::rvalue data, DatabaseService* dbS
         return;
 
     dbService->insertMessage(data, userId);
-
-    SQLite::Statement query(dbService->getDb(), "SELECT messages.id, messages.senderID, users.username, messages.message, messages.created_at FROM messages INNER JOIN users ON messages.senderID = users.id WHERE messages.id = ?");
-    query.bind(1, dbService->getDb().getLastInsertRowid());
+    SQLite::Statement query = dbService->setQuery();
 
     if (query.executeStep()) {
         crow::json::wvalue chat;

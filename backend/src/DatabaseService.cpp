@@ -35,3 +35,10 @@ void DatabaseService::insertMessage(crow::json::rvalue data, std::optional<int> 
     insertQuery.bind(3, static_cast<std::string>(data["message"]));
     insertQuery.exec();
 }
+
+SQLite::Statement DatabaseService::setQuery() {
+        SQLite::Statement query(db, "SELECT messages.id, messages.senderID, users.username, messages.message, messages.created_at FROM messages INNER JOIN users ON messages.senderID = users.id WHERE messages.id = ?");
+        query.bind(1, db.getLastInsertRowid());
+
+        return query;
+    }
