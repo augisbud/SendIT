@@ -1,5 +1,4 @@
 import styles from "./FriendInfo.module.scss";
-import profile from "../../assets/profile.jpg";
 
 interface FriendInfoProps {
     name: string;
