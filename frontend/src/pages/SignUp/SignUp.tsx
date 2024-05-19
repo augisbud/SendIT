@@ -77,7 +77,6 @@ export const SignUp = () => {
 
 const handleRegister = async (inputData : Fields, setErrors : React.Dispatch<React.SetStateAction<Fields>>, navigate : NavigateFunction) => {
     if (!validateFields(inputData, setErrors)) {
-        alert("Please correct the highlighted errors before submitting.");
         return;
     }
 

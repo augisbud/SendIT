@@ -44,6 +44,7 @@ export const Inbox = () => {
         if (searchValue === '') {
             setFilteredChats(chats); // Show all chats if search is empty
         } else {
+            // Doesn't work, needs to be fixed
             setFilteredChats(chats.filter(chat =>
                 chat.senderID.toLowerCase().includes(searchValue.toLowerCase())
             ));
