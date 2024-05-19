@@ -20,7 +20,7 @@ export const AddFriend = () => {
                 try {
                     const token = localStorage.getItem("authToken");
                     const { data } = await axios.get<User[]>(
-                        `http://localhost:8080/users/${value}`,
+                        `http://sendit.zzzz.lt:5552/users/${value}`,
                         {
                             headers: {
                                 'Authorization': `${token}`,

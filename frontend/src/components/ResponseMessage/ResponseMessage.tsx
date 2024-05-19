@@ -1,5 +1,4 @@
 import styles from "./ResponseMessage.module.scss";
-import profilePic from "../../assets/profile.jpg";
 
 interface ResponseMessageProps {
     username: string;
@@ -11,7 +10,6 @@ export const ResponseMessage = ({ username, message, timeAgo}: ResponseMessagePr
     return (
         <div className={styles.ResponseMessage}>
             <div className={styles.UserInfo}>
-                <img src={profilePic} alt="Profile picture" width={32}/>
                 <b>{username}</b>
                 <span> {timeAgo} </span>
                 

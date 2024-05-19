@@ -12,19 +12,22 @@ type MessageData = {
   [key: string]: any;
 };
 
-export const Conversation = ({ sendMessage, readyState, lastJsonMessage }: { sendMessage: (message: MessageData) => void, readyState: ReadyState, lastJsonMessage: Message | null }) => {
+export const Conversation = ({ sendMessage, readyState, lastJsonMessage, chatData }: { sendMessage: (message: MessageData) => void, readyState: ReadyState, lastJsonMessage: Message | null, chatData: Message[] }) => {
   const [log, setLog] = useState<Message[]>([]);
   const recipientId = useParams().id;
   const userID = localStorage.getItem("userID");
 
-  if (userID === null || recipientId === undefined)
-    return null;
+  useEffect(() => {
+    setLog(chatData);
+  }, [chatData]);
 
   useEffect(() => {
-    if (lastJsonMessage) {
-      setLog((l) => [...l, lastJsonMessage]);
+    if (lastJsonMessage && recipientId && userID && lastJsonMessage.senderId === parseInt(recipientId) && lastJsonMessage.senderId !== parseInt(userID)) {
+      setLog((prevLog) => [...prevLog, lastJsonMessage]);
     }
   }, [lastJsonMessage]);
+
+  if (userID === null || recipientId === undefined) return null;
 
   const handleClick = () => {
     if (readyState === ReadyState.OPEN) {
@@ -35,8 +38,6 @@ export const Conversation = ({ sendMessage, readyState, lastJsonMessage }: { sen
         recipientId: parseInt(recipientId),
         senderId: parseInt(userID),
       };
-
-      console.log(messageObject);
 
       setLog((prevLog) => [...prevLog, messageObject as Message]);
       sendMessage(messageObject);
@@ -49,18 +50,15 @@ export const Conversation = ({ sendMessage, readyState, lastJsonMessage }: { sen
     <div className={styles.convSection}>
       <FriendInfo name="Eduardo Burbulito" />
       <div className={styles.messagesContainer}>
-        {
-          log.map((message) => {
-            if (message.senderId === parseInt(userID))
-              return <UsersMessage key={message.id} timeAgo={message.created_at} message={message.message} />;
-            else
-              return <ResponseMessage username={message.username} timeAgo={message.created_at} message={message.message} />;
-          })
-        }
+        {log.map((message) => {
+          if (message.senderId === parseInt(userID))
+            return <UsersMessage key={message.id} timeAgo={message.created_at} message={message.message} />;
+          else (message.senderId === parseInt(recipientId))
+            return <ResponseMessage key={message.id} username={message.username} timeAgo={message.created_at} message={message.message} />;
+        })}
       </div>
       <div className={styles.sendContainer}>
         <input type="text" id="message" placeholder="Aa" />
-
         <Button style={{ padding: "0.5rem 4.5rem", fontSize: "18px" }} onClick={handleClick}>
           Send Message
         </Button>

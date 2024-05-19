@@ -21,11 +21,11 @@ std::optional<int> DatabaseService::getUserID(const std::string& token, TokenUti
 
 void DatabaseService::createTables() {
     db.exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT NOT NULL, password TEXT NOT NULL)");
-    db.exec("CREATE TABLE IF NOT EXISTS messages (id INTEGER PRIMARY KEY, senderID INTEGER, receiverID INTEGER, message TEXT NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
+    db.exec("CREATE TABLE IF NOT EXISTS messages (id INTEGER PRIMARY KEY, senderId INTEGER, receiverId INTEGER, message TEXT NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
 }
 
 void DatabaseService::insertMessage(crow::json::rvalue data, std::optional<int> userId) {
-    SQLite::Statement insertQuery(db, "INSERT INTO messages (senderID, receiverID, message) VALUES (?, ?, ?)");
+    SQLite::Statement insertQuery(db, "INSERT INTO messages (senderId, receiverId, message) VALUES (?, ?, ?)");
     insertQuery.bind(1, userId.value());
     insertQuery.bind(2, static_cast<int>(data["recipientId"]));
     insertQuery.bind(3, static_cast<std::string>(data["message"]));
@@ -33,8 +33,8 @@ void DatabaseService::insertMessage(crow::json::rvalue data, std::optional<int> 
 }
 
 SQLite::Statement DatabaseService::setQuery() {
-        SQLite::Statement query(db, "SELECT messages.id, messages.senderID, users.username, messages.message, messages.created_at FROM messages INNER JOIN users ON messages.senderID = users.id WHERE messages.id = ?");
-        query.bind(1, db.getLastInsertRowid());
+    SQLite::Statement query(db, "SELECT messages.id, messages.senderId, users.username, messages.message, messages.created_at FROM messages INNER JOIN users ON messages.senderId = users.id WHERE messages.id = ?");
+    query.bind(1, db.getLastInsertRowid());
 
-        return query;
-    }
+    return query;
+}

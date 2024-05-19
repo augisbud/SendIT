@@ -15,7 +15,6 @@ import logout from "../../assets/logout.svg";
 export const VerticalNavbar = () => {
   const { pathname } = useLocation();
   const userID = localStorage.getItem("userID");
-  const chatPath = `/chats/${userID}`;
 
   return (
     <div className={styles.navbar}>
@@ -24,8 +23,8 @@ export const VerticalNavbar = () => {
 
         <ul className={styles.navbarMenu}>
           <li className={styles.navbarItem}>
-            <Link className={styles.navbarLink} to={chatPath}>
-            <img src={pathname === chatPath ? chatBlue : chatWhite} alt="chat" />
+            <Link className={styles.navbarLink} to={"/chats/" + userID}>
+            <img src={pathname.includes("/chats/") ? chatBlue : chatWhite} alt="chat" />
             </Link>
           </li>
           <li className={styles.navbarItem}>

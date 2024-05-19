@@ -1,5 +1,4 @@
 import styles from "./UsersMessage.module.scss";
-import profilePic from "../../assets/profile.jpg";
 
 interface UsersMessageProps {
     message: string;
@@ -12,7 +11,6 @@ export const UsersMessage = ({ message, timeAgo}: UsersMessageProps) => {
             <div className={styles.UserInfo}>
                 <b>You</b>
                 <span> {timeAgo} </span>
-                <img src={profilePic} alt="Profile picture" width={32}/>
             </div>
             <div className={styles.message}> {message} </div>
         </div>

@@ -133,9 +133,29 @@ int main() {
             if (!userId.has_value())
                 return crow::response(403);
 
-            SQLite::Statement query(db, "SELECT m.receiverID, u.username AS sender_username, u2.username AS receiver_username, m.message, m.created_at FROM messages m JOIN users u ON m.senderID = u.id JOIN users u2 ON m.receiverID = u2.id WHERE (m.senderID = ? OR m.receiverID = ?) AND NOT EXISTS (SELECT 1 FROM messages m2 WHERE ((m2.senderID = m.senderID AND m2.receiverID = m.receiverID) OR (m2.senderID = m.receiverID AND m2.receiverID = m.senderID)) AND m2.created_at > m.created_at) GROUP BY CASE WHEN m.senderID < m.receiverID THEN m.senderID || '-' || m.receiverID ELSE m.receiverID || '-' || m.senderID END ORDER BY m.created_at DESC;");
+            SQLite::Statement query(db, 
+                "SELECT m.id, "
+                "       sender.username AS senderName, "
+                "       receiver.username AS recipientName, "
+                "       m.senderId, "
+                "       m.receiverId, "
+                "       m.message, "
+                "       m.created_at "
+                "FROM messages m "
+                "JOIN users sender ON m.senderId = sender.id "
+                "JOIN users receiver ON m.receiverId = receiver.id "
+                "JOIN ( "
+                "    SELECT  "
+                "        CASE WHEN senderId = ? THEN receiverId ELSE senderId END AS other_user, "
+                "        MAX(id) AS max_id "
+                "    FROM messages "
+                "    WHERE senderId = ? OR receiverId = ? "
+                "    GROUP BY other_user "
+                ") t ON (m.id = t.max_id);"
+            );
             query.bind(1, userId.value());
             query.bind(2, userId.value());
+            query.bind(3, userId.value());
 
             std::vector<crow::json::wvalue> chats;
             try {
@@ -144,8 +164,10 @@ int main() {
                     chat["id"] = query.getColumn(0).getInt();
                     chat["senderName"] = query.getColumn(1).getText();
                     chat["recipientName"] = query.getColumn(2).getText();
-                    chat["message"] = query.getColumn(3).getText();
-                    chat["created_at"] = query.getColumn(4).getText();
+                    chat["senderId"] = query.getColumn(3).getInt();
+                    chat["receiverId"] = query.getColumn(4).getInt();
+                    chat["message"] = query.getColumn(5).getText();
+                    chat["created_at"] = query.getColumn(6).getText();
                     chats.push_back(chat);
                 }
             } catch (const std::exception& e) {
@@ -169,10 +191,10 @@ int main() {
             if (!userId.has_value())
                 return crow::response(403);
 
-            SQLite::Statement query(db, "SELECT * FROM messages WHERE (senderID = ? OR receiverID = ?) AND (senderID = ? OR receiverID = ?) ORDER BY created_at ASC;");
+            SQLite::Statement query(db, "SELECT messages.id, messages.senderId, messages.receiverId, messages.message, messages.created_at, sender.username AS senderName FROM messages JOIN users AS sender ON messages.senderId = sender.id WHERE (messages.senderId = ? AND messages.receiverId = ?) OR (messages.receiverId = ? AND messages.senderId = ?) ORDER BY messages.created_at ASC;");
             query.bind(1, userId.value());
-            query.bind(2, userId.value());
-            query.bind(3, recipientId);
+            query.bind(2, recipientId);
+            query.bind(3, userId.value());
             query.bind(4, recipientId);
 
             std::vector<crow::json::wvalue> messages;
@@ -180,10 +202,11 @@ int main() {
                 while (query.executeStep()) {
                     crow::json::wvalue message;
                     message["id"] = query.getColumn(0).getInt();
-                    message["senderID"] = query.getColumn(1).getInt();
-                    message["receiverID"] = query.getColumn(2).getInt();
+                    message["senderId"] = query.getColumn(1).getInt();
+                    message["receiverId"] = query.getColumn(2).getInt();
                     message["message"] = query.getColumn(3).getText();
                     message["created_at"] = query.getColumn(4).getText();
+                    message["username"] = query.getColumn(5).getText();
                     messages.push_back(message);
                 }
             } catch (const std::exception& e) {
