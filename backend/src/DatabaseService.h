@@ -4,6 +4,7 @@
 #include <optional>
 #include <SQLiteCpp/SQLiteCpp.h>
 #include "crow.h"
+#include "TokenUtilities.h"
 
 class DatabaseService {
 private:
@@ -13,7 +14,7 @@ public:
 
     SQLite::Database& getDb() const;
 
-    std::optional<int> getUserID(std::string token);
+     std::optional<int> getUserID(const std::string& token, TokenUtilities& tokenUtil) const;
     void createTables();
     void insertMessage(crow::json::rvalue data, std::optional<int> userId);
     SQLite::Statement setQuery();

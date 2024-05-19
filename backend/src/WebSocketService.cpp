@@ -1,10 +1,10 @@
 #include "WebSocketService.h"
 
-void WebSocketService::initiateConnection(crow::json::rvalue data, crow::websocket::connection* conn, DatabaseService* dbService) {
+void WebSocketService::initiateConnection(crow::json::rvalue data, crow::websocket::connection* conn, DatabaseService* dbService, TokenUtilities* tokenUtil) {
     if (!data.has("token") || data["token"].t() != crow::json::type::String)
         return;
 
-    auto userId = dbService->getUserID(static_cast<std::string>(data["token"]).substr(6));
+    auto userId = dbService->getUserID(static_cast<std::string>(data["token"]).substr(6), *tokenUtil);
     if (!userId.has_value())
         return;
 
@@ -24,7 +24,7 @@ void WebSocketService::initiateConnection(crow::json::rvalue data, crow::websock
     }
 }
 
-void WebSocketService::sendMessage(crow::json::rvalue data, DatabaseService* dbService) {
+void WebSocketService::sendMessage(crow::json::rvalue data, DatabaseService* dbService, TokenUtilities* tokenUtil) {
     if (!data.has("token") || data["token"].t() != crow::json::type::String)
         return;
     if (!data.has("recipientId") || data["recipientId"].t() != crow::json::type::Number)
@@ -32,7 +32,7 @@ void WebSocketService::sendMessage(crow::json::rvalue data, DatabaseService* dbS
     if (!data.has("message") || data["message"].t() != crow::json::type::String)
         return;
 
-    auto userId = dbService->getUserID(static_cast<std::string>(data["token"]).substr(6));
+    auto userId = dbService->getUserID(static_cast<std::string>(data["token"]).substr(6), *tokenUtil);
     if (!userId.has_value())
         return;
 

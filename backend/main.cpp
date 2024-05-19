@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iomanip>
+#include <memory>
 
 #include "src/TokenUtilities.h"
 #include "src/DatabaseService.h"
@@ -7,9 +8,9 @@
 
 int main() {
     SQLite::Database db("main.db3", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
-    TokenUtilities* tokenUtil = new TokenUtilities();
-    DatabaseService* dbService = new DatabaseService(db);
-    WebSocketService* wsService = new WebSocketService();
+    auto tokenUtil = std::make_unique<TokenUtilities>();
+    auto dbService = std::make_unique<DatabaseService>(db);
+    auto wsService = std::make_unique<WebSocketService>();
 
     try {
         dbService->createTables();
@@ -31,7 +32,7 @@ int main() {
 
         CROW_ROUTE(app, "/register")
         .methods("POST"_method)
-        ([&db, tokenUtil](const crow::request& req) {
+        ([&db, &tokenUtil](const crow::request& req) {
             auto json = crow::json::load(req.body);
             if (!json)
                 return crow::response(400);
@@ -67,7 +68,7 @@ int main() {
 
         CROW_ROUTE(app, "/login")
         .methods("POST"_method)
-        ([&db, tokenUtil, wsService, dbService](const crow::request& req) {
+        ([&db, &tokenUtil, &wsService, &dbService](const crow::request& req) {
             auto json = crow::json::load(req.body);
             if (!json)
                 return crow::response(400);
@@ -78,7 +79,7 @@ int main() {
 
             std::string token = tokenUtil->generateToken(json["username"].s(), json["password"].s());
 
-            auto userId = dbService->getUserID(token.substr(6));
+            auto userId = dbService->getUserID(token.substr(6), *tokenUtil);
             if (!userId.has_value())
                 return crow::response(403);
 
@@ -90,13 +91,13 @@ int main() {
         });
 
         CROW_ROUTE(app, "/users/<string>")
-        ([&db, dbService](const crow::request& req, std::string username) {
+        ([&db, &dbService, &tokenUtil](const crow::request& req, std::string username) {
             const auto& headers = req.headers;
             auto authHeader = headers.find("Authorization");
             if (authHeader == headers.end())
                 return crow::response(403);
 
-            auto userId = dbService->getUserID(authHeader->second.substr(6));
+            auto userId = dbService->getUserID(authHeader->second.substr(6), *tokenUtil);
             if (!userId.has_value())
                 return crow::response(403);
 
@@ -122,13 +123,13 @@ int main() {
         });
 
         CROW_ROUTE(app, "/chats/")
-        ([&db, dbService](const crow::request& req) {
+        ([&db, &dbService, &tokenUtil](const crow::request& req) {
             const auto& headers = req.headers;
             auto authHeader = headers.find("Authorization");
             if (authHeader == headers.end())
                 return crow::response(403);
 
-            auto userId = dbService->getUserID(authHeader->second.substr(6));
+            auto userId = dbService->getUserID(authHeader->second.substr(6), *tokenUtil);
             if (!userId.has_value())
                 return crow::response(403);
 
@@ -158,13 +159,13 @@ int main() {
         });
 
         CROW_ROUTE(app, "/chats/<int>")
-        ([&db, dbService](const crow::request& req, int recipientId) {
+        ([&db, &dbService, &tokenUtil](const crow::request& req, int recipientId) {
             const auto& headers = req.headers;
             auto authHeader = headers.find("Authorization");
             if (authHeader == headers.end())
                 return crow::response(403);
 
-            auto userId = dbService->getUserID(authHeader->second.substr(6));
+            auto userId = dbService->getUserID(authHeader->second.substr(6), *tokenUtil);
             if (!userId.has_value())
                 return crow::response(403);
 
@@ -197,15 +198,15 @@ int main() {
 
         CROW_WEBSOCKET_ROUTE(app, "/ws")
         .onclose([&](crow::websocket::connection& conn, const std::string& reason) {})
-        .onmessage([&db, wsService, dbService](crow::websocket::connection& conn, const std::string& data, bool isBinary) {
+        .onmessage([&db, &wsService, &dbService, &tokenUtil](crow::websocket::connection& conn, const std::string& data, bool isBinary) {
             auto dataJson = crow::json::load(data);
             if (!dataJson || !dataJson.has("__TYPE__"))
                 return;
 
             if (dataJson["__TYPE__"] == "subscribe")
-                wsService->initiateConnection(dataJson, &conn, dbService);
+                wsService->initiateConnection(dataJson, &conn, dbService.get(), tokenUtil.get());
             else if (dataJson["__TYPE__"] == "message")
-                wsService->sendMessage(dataJson, dbService);
+                wsService->sendMessage(dataJson, dbService.get(), tokenUtil.get());
         });
 
         app.port(8080).multithreaded().run();
@@ -213,6 +214,5 @@ int main() {
         std::cout << "SQLite exception: " << e.what() << std::endl;
         return -1;
     }
-    delete tokenUtil;
     return 0;
 }

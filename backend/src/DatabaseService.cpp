@@ -6,16 +6,12 @@ SQLite::Database& DatabaseService::getDb() const {
     return db;
 }
 
-std::optional<int> DatabaseService::getUserID(std::string token) {
-    std::string credentials = crow::utility::base64decode(token, token.size());
-
-    size_t found = credentials.find(':');
-    std::string username = credentials.substr(0, found);
-    std::string password = credentials.substr(found + 1);
+std::optional<int> DatabaseService::getUserID(const std::string& token, TokenUtilities& tokenUtil) const {
+    TokenUtilities::Credentials credentials = tokenUtil.getCredentials(token);
 
     SQLite::Statement query(db, "SELECT id FROM users WHERE username = ? AND password = ?");
-    query.bind(1, username);
-    query.bind(2, password);
+    query.bind(1, credentials.username);
+    query.bind(2, credentials.password);
 
     if (query.executeStep())
         return query.getColumn(0).getInt();
