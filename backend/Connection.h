@@ -9,19 +9,11 @@ private:
     crow::websocket::connection* User;
 
 public:
-    Connection(int userId, crow::websocket::connection* user) : UserId(std::move(userId)), User(std::move(user)) { }
+    Connection(int userId, crow::websocket::connection* user);
 
-    int getUserId() {
-        return UserId;
-    }
-
-    crow::websocket::connection* getUser() {
-        return User;
-    }
-
-    void setUser(crow::websocket::connection* newUser) {
-        User = newUser;
-    }
+    int getUserId();
+    crow::websocket::connection* getUser();
+    void setUser(crow::websocket::connection* newUser);
 };
 
 #endif
