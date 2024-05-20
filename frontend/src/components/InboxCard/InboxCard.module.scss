@@ -1,16 +1,20 @@
 @use "../../style/variables.scss" as *;
 
 .cardArea {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 7rem auto 7rem;
+
     height: 112px;
     background-color: $bgCover;
     border-radius: 30px;
     gap: 25px;
     margin: 15px 0;
- 
+}
+
+.image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     img {
         border-radius: 84px;
         width: 84px;
@@ -18,25 +22,9 @@
     }
 }
 
-.cardDesc {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-
-    p {
-        margin: 0;
-        padding: 0;
-    }
-}
-
-.cardHeading {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 6rem;
-
-    h4, p {
-        margin: 0;
-        padding: 0;
-    }
+.truncate {
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
