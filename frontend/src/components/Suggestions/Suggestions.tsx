@@ -32,13 +32,10 @@ export const Suggestions = ({ suggestions, name }: SuggestionsProps) => {
         return (
             <div>
                 {(suggestions as Chat[]).map((suggestion) => {
-                    const id = (parseInt(userId) == suggestion.senderId) ? suggestion.receiverId : suggestion.senderId;
-                    const displayName = (parseInt(userId) == suggestion.senderId) ? suggestion.recipientName : suggestion.senderName;
-
                     return <InboxCard
                         key={suggestion.id}
-                        id={id}
-                        username={displayName}
+                        id={suggestion.id}
+                        username={suggestion.displayName}
                         message={suggestion.message}
                         created_at={suggestion.created_at}
                     />

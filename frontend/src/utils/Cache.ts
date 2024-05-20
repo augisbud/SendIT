@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { MessageData } from '../sections/Conversation/Conversation';
 
 interface IToken {
     token: string | null;
@@ -20,3 +21,15 @@ export const useToken = create<IToken>((set) => {
         },
     };
 });
+
+interface IMessage {
+    message: MessageData | null;
+    setMessage: (message: MessageData) => void;
+}
+
+export const useMessage = create<IMessage>(
+    (set) => ({
+        message: null,
+        setMessage: (message) => set({ message }),
+    })
+);

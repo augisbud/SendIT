@@ -11,7 +11,7 @@ import { InputField } from "../../components/InputField/InputField";
 import { useToken } from "../../utils/Cache";
 import { getDateTime } from "../../utils/Date";
 
-type MessageData = {
+export type MessageData = {
   [key: string]: any;
 };
 
@@ -72,7 +72,7 @@ export const Conversation = ({ sendMessage, readyState, lastJsonMessage, chatDat
           if (message.senderId === parseInt(userID))
             return <UsersMessage key={message.id} timeAgo={message.created_at} message={message.message} />;
           else if (message.senderId === parseInt(recipientId))
-            return <ResponseMessage key={message.id} username={message.username} timeAgo={message.created_at} message={message.message} />;
+            return <ResponseMessage key={message.id} username={message.recipientName} timeAgo={message.created_at} message={message.message} />;
           return null;
         })}
         <div ref={messagesEndRef} />

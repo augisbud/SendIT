@@ -45,11 +45,14 @@ void WebSocketService::sendMessage(crow::json::rvalue data, DatabaseService* dbS
 
     if (query.executeStep()) {
         crow::json::wvalue chat;
+
         chat["id"] = query.getColumn(0).getInt();
-        chat["senderId"] = query.getColumn(1).getInt();
-        chat["username"] = query.getColumn(2).getText();
-        chat["message"] = query.getColumn(3).getText();
-        chat["created_at"] = query.getColumn(4).getText();
+        chat["senderName"] = query.getColumn(1).getText();
+        chat["recipientName"] = query.getColumn(2).getText();
+        chat["senderId"] = query.getColumn(3).getInt();
+        chat["receiverId"] = query.getColumn(4).getInt();
+        chat["message"] = query.getColumn(5).getText();
+        chat["created_at"] = query.getColumn(6).getText();
 
         for (auto& c : connections)
             if (c.getUser() && c.getUserId() == static_cast<int>(data["recipientId"]))

@@ -1,9 +1,8 @@
 import styles from "./Chat.module.scss";
 import { VerticalNavbar } from "../../components/VerticalNavbar/VerticalNavbar";
 import { Inbox } from "../../sections/Inbox/Inbox";
-import { Conversation } from "../../sections/Conversation/Conversation";
+import { Conversation, MessageData } from "../../sections/Conversation/Conversation";
 import { ReadyState } from "react-use-websocket";
-import { SendJsonMessage } from "react-use-websocket/dist/lib/types";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useToken } from "../../utils/Cache";
@@ -12,12 +11,12 @@ export type Message = {
     id: string;
     senderId: number;
     recipientId: number;
-    username: string;
+    recipientName: string;
     message: string;
     created_at: string;
 };
 
-export const Chat = ({ sendJsonMessage, readyState, lastJsonMessage }: { sendJsonMessage: SendJsonMessage, readyState: ReadyState, lastJsonMessage: any }) => {
+export const Chat = ({ sendJsonMessage, readyState, lastJsonMessage }: { sendJsonMessage: (message: MessageData) => void, readyState: ReadyState, lastJsonMessage: any }) => {
     const { id: recipientId } = useParams();
     const { token } = useToken();
     const [ chatData, setChatData ] = useState<Message[]>([]);
@@ -47,7 +46,7 @@ export const Chat = ({ sendJsonMessage, readyState, lastJsonMessage }: { sendJso
             <VerticalNavbar />
 
             <div className={styles.chatWrapper}>
-                <Inbox />
+                <Inbox lastJsonMessage={lastJsonMessage as Message | null}  />
                 <Conversation 
                     sendMessage={sendJsonMessage} 
                     readyState={readyState} 
