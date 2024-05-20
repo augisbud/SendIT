@@ -11,13 +11,13 @@
     flex-direction: column;
     flex-grow: 1;
     overflow-y: auto !important;
-    max-height: 656px !important;
 }
 
 .sendContainer {
     margin-top: 1rem;
     display: flex;
     flex-direction: row;
+    margin-top: auto;
 
     gap: 15px;
     position: relative;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ReadyState } from "react-use-websocket";
 import { FriendInfo } from "../../components/FriendInfo/FriendInfo";
 import { ResponseMessage } from "../../components/ResponseMessage/ResponseMessage";
@@ -7,6 +7,7 @@ import styles from "./Conversation.module.scss";
 import { Button } from "../../components/Button/Button";
 import { Message } from "../../pages/Chat/Chat";
 import { useParams } from "react-router-dom";
+import { InputField } from "../../components/InputField/InputField";
 
 type MessageData = {
   [key: string]: any;
@@ -16,6 +17,8 @@ export const Conversation = ({ sendMessage, readyState, lastJsonMessage, chatDat
   const [log, setLog] = useState<Message[]>([]);
   const recipientId = useParams().id;
   const userID = localStorage.getItem("userID");
+  const [message, setMessage] = useState('');
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setLog(chatData);
@@ -25,7 +28,13 @@ export const Conversation = ({ sendMessage, readyState, lastJsonMessage, chatDat
     if (lastJsonMessage && recipientId && userID && lastJsonMessage.senderId === parseInt(recipientId) && lastJsonMessage.senderId !== parseInt(userID)) {
       setLog((prevLog) => [...prevLog, lastJsonMessage]);
     }
-  }, [lastJsonMessage]);
+  }, [lastJsonMessage, recipientId, userID]);
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [log]);
 
   if (userID === null || recipientId === undefined) return null;
 
@@ -34,16 +43,21 @@ export const Conversation = ({ sendMessage, readyState, lastJsonMessage, chatDat
       const messageObject: MessageData = {
         __TYPE__: "message",
         token: localStorage.getItem("authToken"),
-        message: (document.getElementById("message") as HTMLInputElement).value,
+        message: message,
         recipientId: parseInt(recipientId),
         senderId: parseInt(userID),
       };
 
       setLog((prevLog) => [...prevLog, messageObject as Message]);
       sendMessage(messageObject);
+      setMessage('');
     } else {
       console.error("WebSocket connection not open.");
     }
+  };
+
+  const handleEnterPress = () => {
+    handleClick();
   };
 
   return (
@@ -53,12 +67,22 @@ export const Conversation = ({ sendMessage, readyState, lastJsonMessage, chatDat
         {log.map((message) => {
           if (message.senderId === parseInt(userID))
             return <UsersMessage key={message.id} timeAgo={message.created_at} message={message.message} />;
-          else (message.senderId === parseInt(recipientId))
+          else if (message.senderId === parseInt(recipientId))
             return <ResponseMessage key={message.id} username={message.username} timeAgo={message.created_at} message={message.message} />;
+          return null;
         })}
+        <div ref={messagesEndRef} />
       </div>
       <div className={styles.sendContainer}>
-        <input type="text" id="message" placeholder="Aa" />
+        <InputField
+          type="text"
+          name="message"
+          label=""
+          placeholder="Aa"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onEnterPress={handleEnterPress}
+        />
         <Button style={{ padding: "0.5rem 4.5rem", fontSize: "18px" }} onClick={handleClick}>
           Send Message
         </Button>

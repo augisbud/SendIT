@@ -18,6 +18,7 @@ export const SearchBar = ({ name, value, onChange }: SearchBarProps) => {
                 id={`${name}-input`}
                 value={value}
                 placeholder="Search"
+                autoComplete="off"
                 onChange={onChange}
             />
         </div>
