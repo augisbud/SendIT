@@ -6,6 +6,8 @@ import { InputField } from '../../components/InputField/InputField';
 import { Button } from '../../components/Button/Button';
 import { useToken } from '../../utils/Cache';
 
+import Swal from 'sweetalert2'
+
 interface Fields {
     username?: string;
     email?: string;
@@ -79,6 +81,11 @@ export const SignUp = () => {
 
 const handleRegister = async (inputData : Fields, setErrors : React.Dispatch<React.SetStateAction<Fields>>, setToken : (token: string | null) => void, navigate : NavigateFunction) => {
     if (!validateFields(inputData, setErrors)) {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: 'Please correct the highlighted errors before submitting.'
+        })
         return;
     }
 
@@ -103,7 +110,11 @@ const handleRegister = async (inputData : Fields, setErrors : React.Dispatch<Rea
             console.error(data.message);
         }
     } catch (error) {
-        console.error('An error occurred while registering. Please try again later.');
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: 'An error occurred while registering. Please try again later.'
+        })
     }
 };
 

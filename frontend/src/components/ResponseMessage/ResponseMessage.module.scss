@@ -14,7 +14,7 @@ b {
 .UserInfo {
     margin-bottom: 0.5rem;
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
     align-items: center;
 }
 
@@ -25,4 +25,8 @@ b {
     max-height: fit-content;
     padding: 1rem;
     margin-left: 2rem;
+    max-width: 400px;
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: pre-wrap;
 }
