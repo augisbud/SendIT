@@ -23,7 +23,7 @@ export const Chat = ({ sendJsonMessage, readyState, lastJsonMessage }: { sendJso
 
     useEffect(() => {
         const fetchChatData = async () => {
-            const response = await fetch(`http://localhost:8080/chats/${recipientId}`, {
+            const response = await fetch(`http://sendit.zzzz.lt:5552/chats/${recipientId}`, {
                 method: "GET",
                 headers: {
                     'Authorization': token!

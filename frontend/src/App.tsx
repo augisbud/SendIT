@@ -18,7 +18,7 @@ export const App = () => {
   const { setMessage } = useMessage(); 
 
   const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(
-    "ws://localhost:8080/ws",
+    "ws://sendit.zzzz.lt:5552/ws",
     {
       share: false,
       shouldReconnect: () => true,

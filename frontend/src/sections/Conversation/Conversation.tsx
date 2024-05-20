@@ -41,7 +41,7 @@ export const Conversation = ({ sendMessage, readyState, lastJsonMessage, chatDat
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('http://localhost:8080/users/' + recipientId + '/username', {
+      const response = await fetch('http://sendit.zzzz.lt:5552/users/' + recipientId + '/username', {
         headers: {
           'Authorization': token!
         }

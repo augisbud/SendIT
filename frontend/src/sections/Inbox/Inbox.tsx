@@ -33,7 +33,7 @@ export const Inbox = ({lastJsonMessage} : { lastJsonMessage : any }) => {
         const fetchChats = async () => {
             try {
                 const { data } = await axios.get<RawChat[]>(
-                    `http://localhost:8080/chats`,
+                    `http://sendit.zzzz.lt:5552/chats`,
                     {
                         headers: {
                             'Authorization': `${token}`,
