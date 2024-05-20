@@ -4,6 +4,7 @@ import { VerticalNavbar } from "../../components/VerticalNavbar/VerticalNavbar";
 import { SearchBar } from "../../components/SearchBar/SearchBar";
 import { Suggestions } from "../../components/Suggestions/Suggestions";
 import axios from 'axios';
+import { useToken } from "../../utils/Cache";
 
 interface User {
     username: string;
@@ -11,6 +12,8 @@ interface User {
 }
 
 export const AddFriend = () => {
+    const { token } = useToken();
+    
     const [value, setValue] = useState('');
     const [suggestions, setSuggestions] = useState<User[]>([]);
 
@@ -18,9 +21,8 @@ export const AddFriend = () => {
         const fetchData = async () => {
             if (value) {
                 try {
-                    const token = localStorage.getItem("authToken");
                     const { data } = await axios.get<User[]>(
-                        `http://sendit.zzzz.lt:5552/users/${value}`,
+                        `http://localhost:8080/users/${value}`,
                         {
                             headers: {
                                 'Authorization': `${token}`,
@@ -29,7 +31,7 @@ export const AddFriend = () => {
                     );
                     setSuggestions(data);
                 } catch (error) {
-                    console.log(error);
+                    console.error(error);
                 }
             }
         };

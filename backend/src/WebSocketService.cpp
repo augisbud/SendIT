@@ -24,6 +24,10 @@ void WebSocketService::initiateConnection(crow::json::rvalue data, crow::websock
     }
 }
 
+void WebSocketService::removeConnection(crow::websocket::connection* conn) {
+    connections.erase(std::remove_if(connections.begin(), connections.end(), [&](const Connection& c) { return c.getUser() == conn; }), connections.end());
+}
+
 void WebSocketService::sendMessage(crow::json::rvalue data, DatabaseService* dbService, TokenUtilities* tokenUtil) {
     if (!data.has("token") || data["token"].t() != crow::json::type::String)
         return;

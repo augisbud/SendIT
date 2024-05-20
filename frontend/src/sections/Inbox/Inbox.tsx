@@ -3,6 +3,7 @@ import styles from "./Inbox.module.scss";
 import { SearchBar } from "../../components/SearchBar/SearchBar";
 import { Suggestions } from "../../components/Suggestions/Suggestions";
 import axios from 'axios';
+import { useToken } from "../../utils/Cache";
 
 export interface Chat {
     id: number;
@@ -15,15 +16,15 @@ export interface Chat {
 }
 
 export const Inbox = () => {
+    const { token } = useToken();
     const [searchValue, setSearchValue] = useState('');
     const [chats, setChats] = useState<Chat[]>([]);
 
     useEffect(() => {
         const fetchChats = async () => {
             try {
-                const token = localStorage.getItem("authToken");
                 const { data } = await axios.get<Chat[]>(
-                    `http://sendit.zzzz.lt:5552/chats`,
+                    `http://localhost:8080/chats`,
                     {
                         headers: {
                             'Authorization': `${token}`,
@@ -33,7 +34,7 @@ export const Inbox = () => {
 
                 setChats(data);
             } catch (error) {
-                console.log(error);
+                console.error(error);
             }
         };
         fetchChats();

@@ -2,11 +2,11 @@
 
 Connection::Connection(int userId, crow::websocket::connection* user) : UserId(std::move(userId)), User(std::move(user)) { }
 
-int Connection::getUserId() {
+int Connection::getUserId() const {
     return UserId;
 }
 
-crow::websocket::connection* Connection::getUser() {
+crow::websocket::connection* Connection::getUser() const {
     return User;
 }
 

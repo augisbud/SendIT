@@ -6,6 +6,7 @@ import { ReadyState } from "react-use-websocket";
 import { SendJsonMessage } from "react-use-websocket/dist/lib/types";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useToken } from "../../utils/Cache";
 
 export type Message = {
     id: string;
@@ -18,16 +19,15 @@ export type Message = {
 
 export const Chat = ({ sendJsonMessage, readyState, lastJsonMessage }: { sendJsonMessage: SendJsonMessage, readyState: ReadyState, lastJsonMessage: any }) => {
     const { id: recipientId } = useParams();
+    const { token } = useToken();
     const [ chatData, setChatData ] = useState<Message[]>([]);
-
-    console.log(chatData)
 
     useEffect(() => {
         const fetchChatData = async () => {
-            const response = await fetch(`http://sendit.zzzz.lt:5552/chats/${recipientId}`, {
+            const response = await fetch(`http://localhost:8080/chats/${recipientId}`, {
                 method: "GET",
                 headers: {
-                    'Authorization': localStorage.getItem("authToken")!
+                    'Authorization': token!
                 }
             });
 

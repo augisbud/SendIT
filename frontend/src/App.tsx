@@ -9,10 +9,13 @@ import "./globals.scss";
 import { AddFriend } from './pages/AddFriend/AddFriend';
 import { useEffect } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
+import { useToken } from './utils/Cache';
 
 export const App = () => {
+  const { token } = useToken();
+
   const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(
-    "ws://sendit.zzzz.lt:5552/ws",
+    "ws://localhost:8080/ws",
     {
       share: false,
       shouldReconnect: () => true,
@@ -20,14 +23,13 @@ export const App = () => {
   );
 
   useEffect(() => {
-    const authToken = localStorage.getItem("authToken");
-    if (readyState === ReadyState.OPEN && authToken) {
+    if (token && readyState === ReadyState.OPEN) {
       sendJsonMessage({
         __TYPE__: "subscribe",
-        token: authToken,
+        token: token,
       });
     }
-  }, [readyState, sendJsonMessage]);
+  }, [token, readyState, sendJsonMessage]);
 
   return (
     <BrowserRouter>

@@ -11,8 +11,8 @@ private:
 public:
     Connection(int userId, crow::websocket::connection* user);
 
-    int getUserId();
-    crow::websocket::connection* getUser();
+    int getUserId() const;
+    crow::websocket::connection* getUser() const;
     void setUser(crow::websocket::connection* newUser);
 };
 

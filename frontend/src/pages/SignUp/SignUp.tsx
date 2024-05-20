@@ -4,6 +4,7 @@ import styles from './SignUp.module.scss'
 import { Logo } from '../../components/Logo/Logo';
 import { InputField } from '../../components/InputField/InputField';
 import { Button } from '../../components/Button/Button';
+import { useToken } from '../../utils/Cache';
 
 interface Fields {
     username?: string;
@@ -13,6 +14,7 @@ interface Fields {
 }
 
 export const SignUp = () => {
+    const { setToken } = useToken();
     const navigate = useNavigate();
 
     const [inputData, setInputData] = useState<Fields>({});
@@ -62,7 +64,7 @@ export const SignUp = () => {
                 <div>
                     <Button
                         style={{ padding: "0.5rem 0", fontSize: "18px" }}
-                        onClick={ () => handleRegister(inputData, setErrors, navigate) }
+                        onClick={ () => handleRegister(inputData, setErrors, setToken, navigate) }
                     >
                         Create an account
                     </Button>
@@ -75,13 +77,13 @@ export const SignUp = () => {
     );
 };
 
-const handleRegister = async (inputData : Fields, setErrors : React.Dispatch<React.SetStateAction<Fields>>, navigate : NavigateFunction) => {
+const handleRegister = async (inputData : Fields, setErrors : React.Dispatch<React.SetStateAction<Fields>>, setToken : (token: string | null) => void, navigate : NavigateFunction) => {
     if (!validateFields(inputData, setErrors)) {
         return;
     }
 
     try {
-        const response = await fetch('http://sendit.zzzz.lt:5552/register', {
+        const response = await fetch('http://localhost:8080/register', {
             method: 'POST',
             headers: {
                 'Access-Control-Allow-Origin': '*',
@@ -92,8 +94,8 @@ const handleRegister = async (inputData : Fields, setErrors : React.Dispatch<Rea
 
         if (response.ok) {
             const data = await response.json();
+            setToken(data.token);
 
-            localStorage.setItem("authToken", data.token);
             navigate("/login");
         } else {
             const data = await response.json();

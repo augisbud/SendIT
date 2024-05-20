@@ -220,7 +220,9 @@ int main() {
         });
 
         CROW_WEBSOCKET_ROUTE(app, "/ws")
-        .onclose([&](crow::websocket::connection& conn, const std::string& reason) {})
+        .onclose([&wsService](crow::websocket::connection& conn, const std::string& reason) {
+            wsService->removeConnection(&conn);
+        })
         .onmessage([&db, &wsService, &dbService, &tokenUtil](crow::websocket::connection& conn, const std::string& data, bool isBinary) {
             auto dataJson = crow::json::load(data);
             if (!dataJson || !dataJson.has("__TYPE__"))

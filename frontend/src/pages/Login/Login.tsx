@@ -4,6 +4,7 @@ import styles from './Login.module.scss'
 import { Logo } from '../../components/Logo/Logo';
 import { InputField } from '../../components/InputField/InputField';
 import { Button } from '../../components/Button/Button';
+import { useToken } from '../../utils/Cache';
 
 interface Fields {
     username?: string;
@@ -11,6 +12,7 @@ interface Fields {
 }
 
 export const Login = () => {
+    const { setToken } = useToken();
     const navigate = useNavigate();
 
     const [inputData, setInputData] = useState<Fields>({});
@@ -44,7 +46,7 @@ export const Login = () => {
                 <div>
                     <Button
                         style={{ padding: "0.5rem 0", fontSize: "18px" }}
-                        onClick={ () => handleSubmit(inputData, setErrors, navigate) }
+                        onClick={ () => handleSubmit(inputData, setErrors, setToken, navigate) }
                     >
                         Login
                     </Button>
@@ -62,14 +64,14 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>, setInputData : Rea
     setInputData(prev => ({ ...prev, [name]: value }));
 };
 
-const handleSubmit = async (inputData : Fields, setErrors : React.Dispatch<React.SetStateAction<Fields>>, navigate : NavigateFunction) => {
+const handleSubmit = async (inputData : Fields, setErrors : React.Dispatch<React.SetStateAction<Fields>>, setToken : (token: string | null) => void, navigate : NavigateFunction) => {
     if (!validateFields(inputData, setErrors)) {
         alert("Please correct the highlighted errors before submitting.");
         return;
     }
 
     try {
-        const response = await fetch('http://sendit.zzzz.lt:5552/login', {
+        const response = await fetch('http://localhost:8080/login', {
             method: 'POST',
             headers: {
                 'Access-Control-Allow-Origin': '*',
@@ -81,7 +83,7 @@ const handleSubmit = async (inputData : Fields, setErrors : React.Dispatch<React
         if (response.ok) {
             const data = await response.json();
 
-            localStorage.setItem("authToken", data.token);
+            setToken(data.token);
             localStorage.setItem('userID', data.userID);
 
             navigate(`/chats/${data.userID}`);

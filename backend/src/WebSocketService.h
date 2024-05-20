@@ -13,6 +13,7 @@ private:
 
 public:
     void initiateConnection(crow::json::rvalue data, crow::websocket::connection* conn, DatabaseService* dbService, TokenUtilities* tokenUtil);
+    void removeConnection(crow::websocket::connection* conn);
     void sendMessage(crow::json::rvalue data, DatabaseService* dbService, TokenUtilities* tokenUtil);
 };
 

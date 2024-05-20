@@ -8,6 +8,8 @@ import { Button } from "../../components/Button/Button";
 import { Message } from "../../pages/Chat/Chat";
 import { useParams } from "react-router-dom";
 import { InputField } from "../../components/InputField/InputField";
+import { useToken } from "../../utils/Cache";
+import { getDateTime } from "../../utils/Date";
 
 type MessageData = {
   [key: string]: any;
@@ -15,6 +17,7 @@ type MessageData = {
 
 export const Conversation = ({ sendMessage, readyState, lastJsonMessage, chatData }: { sendMessage: (message: MessageData) => void, readyState: ReadyState, lastJsonMessage: Message | null, chatData: Message[] }) => {
   const [log, setLog] = useState<Message[]>([]);
+  const { token } = useToken();
   const recipientId = useParams().id;
   const userID = localStorage.getItem("userID");
   const [message, setMessage] = useState('');
@@ -42,10 +45,11 @@ export const Conversation = ({ sendMessage, readyState, lastJsonMessage, chatDat
     if (readyState === ReadyState.OPEN) {
       const messageObject: MessageData = {
         __TYPE__: "message",
-        token: localStorage.getItem("authToken"),
+        token: token,
         message: message,
         recipientId: parseInt(recipientId),
         senderId: parseInt(userID),
+        created_at: getDateTime()
       };
 
       setLog((prevLog) => [...prevLog, messageObject as Message]);
