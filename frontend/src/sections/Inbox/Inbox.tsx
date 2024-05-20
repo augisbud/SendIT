@@ -24,7 +24,7 @@ export const Inbox = () => {
         const fetchChats = async () => {
             try {
                 const { data } = await axios.get<Chat[]>(
-                    `http://localhost:8080/chats`,
+                    `http://sendit.zzzz.lt:5552/chats`,
                     {
                         headers: {
                             'Authorization': `${token}`,
