@@ -206,7 +206,7 @@ int main() {
                     message["receiverId"] = query.getColumn(2).getInt();
                     message["message"] = query.getColumn(3).getText();
                     message["created_at"] = query.getColumn(4).getText();
-                    message["recipientName"] = query.getColumn(5).getText();
+                    message["senderName"] = query.getColumn(5).getText();
                     messages.push_back(message);
                 }
             } catch (const std::exception& e) {

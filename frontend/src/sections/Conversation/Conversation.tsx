@@ -28,6 +28,7 @@ export const Conversation = ({ sendMessage, readyState, lastJsonMessage, chatDat
   }, [chatData]);
 
   useEffect(() => {
+    console.log(lastJsonMessage);
     if (lastJsonMessage && recipientId && userID && lastJsonMessage.senderId === parseInt(recipientId) && lastJsonMessage.senderId !== parseInt(userID)) {
       setLog((prevLog) => [...prevLog, lastJsonMessage]);
     }
@@ -72,7 +73,8 @@ export const Conversation = ({ sendMessage, readyState, lastJsonMessage, chatDat
           if (message.senderId === parseInt(userID))
             return <UsersMessage key={message.id} timeAgo={message.created_at} message={message.message} />;
           else if (message.senderId === parseInt(recipientId))
-            return <ResponseMessage key={message.id} username={message.recipientName} timeAgo={message.created_at} message={message.message} />;
+            return <ResponseMessage key={message.id} username={message.senderName} timeAgo={message.created_at} message={message.message} />;
+
           return null;
         })}
         <div ref={messagesEndRef} />

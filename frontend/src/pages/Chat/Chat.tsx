@@ -11,7 +11,7 @@ export type Message = {
     id: string;
     senderId: number;
     recipientId: number;
-    recipientName: string;
+    senderName: string;
     message: string;
     created_at: string;
 };
