@@ -22,7 +22,7 @@ export const AddFriend = () => {
             if (value) {
                 try {
                     const { data } = await axios.get<User[]>(
-                        `http://sendit.zzzz.lt:5552/users/${value}`,
+                        `http://localhost:8080/users/${value}`,
                         {
                             headers: {
                                 'Authorization': `${token}`,

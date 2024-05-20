@@ -71,7 +71,7 @@ const handleSubmit = async (inputData : Fields, setErrors : React.Dispatch<React
     }
 
     try {
-        const response = await fetch('http://sendit.zzzz.lt:5552/login', {
+        const response = await fetch('http://localhost:8080/login', {
             method: 'POST',
             headers: {
                 'Access-Control-Allow-Origin': '*',

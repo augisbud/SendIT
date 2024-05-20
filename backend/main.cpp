@@ -122,6 +122,35 @@ int main() {
             return crow::response(response);
         });
 
+        CROW_ROUTE(app, "/users/<int>/username")
+        ([&db, &dbService, &tokenUtil](const crow::request& req, int user) {
+            const auto& headers = req.headers;
+            auto authHeader = headers.find("Authorization");
+            if (authHeader == headers.end())
+                return crow::response(403);
+
+            auto userId = dbService->getUserID(authHeader->second.substr(6), *tokenUtil);
+            if (!userId.has_value())
+                return crow::response(403);
+
+            SQLite::Statement query(db, "SELECT username FROM users WHERE id = ?;");
+            query.bind(1, user);
+
+            try {
+                if (query.executeStep()) {
+                    crow::json::wvalue user;
+                    user["username"] = query.getColumn(0).getText();
+
+                    return crow::response(user);
+                }
+
+                return crow::response(400);
+            } catch (const std::exception& e) {
+                CROW_LOG_ERROR << "Error executing SQL query: " << e.what();
+                return crow::response(500);
+            }           
+        });
+
         CROW_ROUTE(app, "/chats/")
         ([&db, &dbService, &tokenUtil](const crow::request& req) {
             const auto& headers = req.headers;

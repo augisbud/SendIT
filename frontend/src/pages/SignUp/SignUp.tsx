@@ -83,7 +83,7 @@ const handleRegister = async (inputData : Fields, setErrors : React.Dispatch<Rea
     }
 
     try {
-        const response = await fetch('http://sendit.zzzz.lt:5552/register', {
+        const response = await fetch('http://localhost:8080/register', {
             method: 'POST',
             headers: {
                 'Access-Control-Allow-Origin': '*',
