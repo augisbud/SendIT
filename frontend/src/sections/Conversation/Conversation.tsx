@@ -22,6 +22,7 @@ export const Conversation = ({ sendMessage, readyState, lastJsonMessage, chatDat
   const userID = localStorage.getItem("userID");
   const [message, setMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const [recipientName, setRecipientName] = useState("");
 
   useEffect(() => {
     setLog(chatData);
@@ -40,10 +41,25 @@ export const Conversation = ({ sendMessage, readyState, lastJsonMessage, chatDat
     }
   }, [log]);
 
-  if (userID === null || recipientId === undefined) return null;
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch('http://sendit.zzzz.lt:5552/users/' + recipientId + '/username', {
+        headers: {
+          'Authorization': token!
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
 
-  const recipientName =
-    log.find((msg) => msg.senderId === parseInt(recipientId))?.senderName || "Unknown User";
+      const json = await response.json();
+      setRecipientName(json.username);
+    };
+
+    fetchData();
+  }, []);
+
+  if (userID === null || recipientId === undefined) return null;
 
   const handleClick = () => {
     if (readyState === ReadyState.OPEN) {
