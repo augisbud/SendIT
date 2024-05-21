@@ -10,7 +10,6 @@ import Swal from 'sweetalert2'
 
 interface Fields {
     username?: string;
-    email?: string;
     password?: string;
     confirmPassword?: string;
 }
@@ -37,14 +36,6 @@ export const SignUp = () => {
                         value={inputData.username || ''}
                         error={errors.username}
                         onChange={(e) => setInputData({ ...inputData, username: e.target.value })}
-                    />
-                    <InputField
-                        type="email"
-                        name="email"
-                        label='Email address'
-                        value={inputData.email || ''}
-                        error={errors.email}
-                        onChange={(e) => setInputData({ ...inputData, email: e.target.value })}
                     />
                     <InputField
                         type="password"
@@ -124,14 +115,6 @@ const validateFields = (inputData : Fields, setErrors : React.Dispatch<React.Set
 
     if (!inputData.username) {
         newErrors.username = "Username is required";
-        isValid = false;
-    }
-
-    if (!inputData.email) {
-        newErrors.email = "Email is required";
-        isValid = false;
-    } else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(inputData.email)) {
-        newErrors.email = "Email is invalid";
         isValid = false;
     }
 

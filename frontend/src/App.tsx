@@ -6,7 +6,6 @@ import { Chat } from './pages/Chat/Chat';
 import { Settings } from './pages/Settings/Settings';
 
 import "./globals.scss";
-import { AddFriend } from './pages/AddFriend/AddFriend';
 import { useEffect } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { useMessage, useToken } from './utils/Cache';
@@ -41,7 +40,6 @@ export const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/chats/:id" element={<Chat sendJsonMessage={ (m) => sendMessage(m, sendJsonMessage, setMessage)} readyState={readyState} lastJsonMessage={lastJsonMessage}/>} />
-        <Route path="/friends" element={<AddFriend />} />
         <Route path="/settings" element={<Settings />} />
       </Routes>
     </BrowserRouter>

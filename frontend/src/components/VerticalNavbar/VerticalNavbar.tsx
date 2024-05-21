@@ -6,8 +6,6 @@ import { Logo } from "../Logo/Logo";
 
 import chatWhite from "../../assets/chat-white.svg";
 import chatBlue from "../../assets/chat-blue.svg";
-import friendWhite from "../../assets/friend-white.svg";
-import friendBlue from "../../assets/friend-blue.svg";
 import settingsWhite from "../../assets/settings-white.svg";
 import settingsBlue from "../../assets/settings-blue.svg";
 import logout from "../../assets/logout.svg";
@@ -28,11 +26,6 @@ export const VerticalNavbar = () => {
             </Link>
           </li>
           <li className={styles.navbarItem}>
-            <Link className={styles.navbarLink} to="/friends">
-              <img src={pathname === "/friends" ? friendBlue : friendWhite} alt="friend" />
-            </Link>
-          </li>
-          <li className={styles.navbarItem}>
             <Link className={styles.navbarLink} to="/settings">
               <img src={pathname === "/settings" ? settingsBlue : settingsWhite} alt="settings" />
             </Link>
@@ -40,7 +33,7 @@ export const VerticalNavbar = () => {
         </ul>
       </div>
       <li className={styles.Logout}>
-        <Link className={styles.navbarLink} to="/logout">
+        <Link className={styles.navbarLink} to="/">
             <img src={logout} alt="logout" />
         </Link>
       </li>
