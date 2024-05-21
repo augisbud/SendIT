@@ -108,7 +108,7 @@ export const Conversation = ({ sendMessage, readyState, lastJsonMessage, chatDat
           onEnterPress={handleEnterPress}
         />
         <Button style={{ padding: "0.5rem 4.5rem", fontSize: "18px" }} onClick={handleClick}>
-          Send Message
+          SendIT
         </Button>
       </div>
     </div>

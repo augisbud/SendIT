@@ -3,7 +3,7 @@
     padding: 1rem;
     display: flex;
     flex-direction: column;
-    max-height: 95vh;
+    max-height: 100vh;
     padding: 0;
 }
 
@@ -19,6 +19,8 @@
     display: flex;
     flex-direction: row;
     margin-top: auto;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
 
     gap: 15px;
     position: relative;
