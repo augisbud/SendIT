@@ -22,25 +22,43 @@ export const Conversation = ({ sendMessage, readyState, lastJsonMessage, chatDat
   const userID = localStorage.getItem("userID");
   const [message, setMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const [recipientName, setRecipientName] = useState("");
 
   useEffect(() => {
     setLog(chatData);
   }, [chatData]);
 
   useEffect(() => {
-    console.log(lastJsonMessage);
     if (lastJsonMessage && recipientId && userID && lastJsonMessage.senderId === parseInt(recipientId) && lastJsonMessage.senderId !== parseInt(userID)) {
       setLog((prevLog) => [...prevLog, lastJsonMessage]);
     }
   }, [lastJsonMessage, recipientId, userID]);
 
   useEffect(() => {
-    if (messagesEndRef.current) {
+    if (messagesEndRef.current)
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
   }, [log]);
 
-  if (userID === null || recipientId === undefined) return null;
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch('http://sendit.zzzz.lt:5552/users/' + recipientId + '/username', {
+        headers: {
+          'Authorization': token!
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const json = await response.json();
+      setRecipientName(json.username);
+    };
+
+    fetchData();
+  }, []);
+
+  if (userID === null || recipientId === undefined) 
+    return null;
 
   const recipientName =
     log.find((msg) => msg.senderId === parseInt(recipientId))?.senderName || "Unknown User";
@@ -62,10 +80,6 @@ export const Conversation = ({ sendMessage, readyState, lastJsonMessage, chatDat
     } else {
       console.error("WebSocket connection not open.");
     }
-  };
-
-  const handleEnterPress = () => {
-    handleClick();
   };
 
   return (
@@ -90,7 +104,7 @@ export const Conversation = ({ sendMessage, readyState, lastJsonMessage, chatDat
           placeholder="Aa"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          onEnterPress={handleEnterPress}
+          onEnterPress={handleClick}
         />
         <Button style={{ padding: "0.5rem 4.5rem", fontSize: "18px" }} onClick={handleClick}>
           Send Message

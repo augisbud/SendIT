@@ -21,14 +21,15 @@ export const InboxCard = ({ username, id, created_at, message} : InboxCardProps)
 
     return (
         <div className={styles.cardArea} key={id} onClick={handleClick}>
-            <img src={profile} alt="profile"/>
-
+            <div className={styles.image}>
+                <img src={profile} alt="profile"/>
+            </div>
             <div className={styles.cardDesc}>
-                <div className={styles.cardHeading}>
-                    <h4>{username}</h4>
-                    <p>{formattedDate}</p>
-                </div>
-                <p>{message}</p>
+                <h4>{username}</h4>
+                <p className={styles.truncate}>{message}</p>
+            </div>
+            <div>
+                <p>{formattedDate}</p>
             </div>
         </div>
     );
