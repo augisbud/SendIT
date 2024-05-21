@@ -60,6 +60,9 @@ export const Conversation = ({ sendMessage, readyState, lastJsonMessage, chatDat
   if (userID === null || recipientId === undefined) 
     return null;
 
+  const recipientName =
+    log.find((msg) => msg.senderId === parseInt(recipientId))?.senderName || "Unknown User";
+
   const handleClick = () => {
     if (readyState === ReadyState.OPEN) {
       const messageObject: MessageData = {
@@ -83,11 +86,11 @@ export const Conversation = ({ sendMessage, readyState, lastJsonMessage, chatDat
     <div className={styles.convSection}>
       <FriendInfo name={recipientName} />
       <div className={styles.messagesContainer}>
-        {log.map((message) => {
+        {log.map((message, index) => {
           if (message.senderId === parseInt(userID))
-            return <UsersMessage key={message.id} timeAgo={message.created_at} message={message.message} />;
+            return <UsersMessage key={message.id || index} timeAgo={message.created_at} message={message.message} />;
           else if (message.senderId === parseInt(recipientId))
-            return <ResponseMessage key={message.id} username={message.senderName} timeAgo={message.created_at} message={message.message} />;
+            return <ResponseMessage key={message.id || index} username={message.senderName} timeAgo={message.created_at} message={message.message} />;
 
           return null;
         })}
