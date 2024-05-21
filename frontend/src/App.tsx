@@ -11,6 +11,7 @@ import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { useMessage, useToken } from './utils/Cache';
 import { SendJsonMessage } from 'react-use-websocket/dist/lib/types';
 import { MessageData } from './sections/Conversation/Conversation';
+import { UnderConstruction } from './pages/UnderConstruction/UnderConstruction';
 
 export const App = () => {
   const { token } = useToken();
@@ -40,7 +41,7 @@ export const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/chats/:id" element={<Chat sendJsonMessage={ (m) => sendMessage(m, sendJsonMessage, setMessage)} readyState={readyState} lastJsonMessage={lastJsonMessage}/>} />
-        <Route path="/settings" element={<Settings />} />
+        <Route path="/settings" element={<UnderConstruction />} />
       </Routes>
     </BrowserRouter>
   )
