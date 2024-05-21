@@ -1,7 +1,5 @@
-import React from 'react';
 import styles from './UnderConstruction.module.scss'
 import underCon from '../../assets/underCon.png'
-
 
 export const UnderConstruction = () => {
     return (
