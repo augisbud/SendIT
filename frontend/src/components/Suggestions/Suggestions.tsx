@@ -10,9 +10,10 @@ interface User {
 interface SuggestionsProps {
     suggestions: User[] | Chat[];
     name: string;
+    onClearSearch: () => void;
 }
 
-export const Suggestions = ({ suggestions, name }: SuggestionsProps) => {
+export const Suggestions = ({ suggestions, name, onClearSearch }: SuggestionsProps) => {
     const userId = localStorage.getItem("userID");
 
     if (name === 'find-friend')
@@ -23,6 +24,7 @@ export const Suggestions = ({ suggestions, name }: SuggestionsProps) => {
                         key={suggestion.id}
                         id={suggestion.id}
                         username={suggestion.username}
+                        onClearSearch={onClearSearch}
                     />
                 ))}
             </div>

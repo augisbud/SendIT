@@ -22,12 +22,18 @@ export interface Chat {
     created_at: string;
 }
 
+interface User {
+    username: string;
+    id: number;
+}
+
 export const Inbox = ({lastJsonMessage} : { lastJsonMessage : any }) => {
     const userId = localStorage.getItem("userID");
     const { token } = useToken();
     const { message } = useMessage();
     const [searchValue, setSearchValue] = useState('');
     const [chats, setChats] = useState<Chat[]>([]);
+    const [userSuggestions, setUserSuggestions] = useState<User[]>([]);
 
     useEffect(() => {
         const fetchChats = async () => {
@@ -55,11 +61,37 @@ export const Inbox = ({lastJsonMessage} : { lastJsonMessage : any }) => {
                 console.error(error);
             }
         };
+
+        const fetchUsers = async () => {
+            if (searchValue) {
+                try {
+                    const { data } = await axios.get<User[]>(
+                        `http://sendit.zzzz.lt:5552/users/${searchValue}`,
+                        {
+                            headers: {
+                                'Authorization': `${token}`,
+                            }
+                        }
+                    );
+                    setUserSuggestions(data);
+                } catch (error) {
+                    console.error(error);
+                }
+            } else {
+                setUserSuggestions([]);
+            }
+        };
+
         fetchChats();
-    }, [lastJsonMessage, message]);
+        fetchUsers();
+    }, [lastJsonMessage, message, searchValue, token, userId]);
 
     const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
         setSearchValue(e.target.value);
+    };
+
+    const clearSearch = () => {
+        setSearchValue('');
     };
 
     return (
@@ -71,7 +103,11 @@ export const Inbox = ({lastJsonMessage} : { lastJsonMessage : any }) => {
             </div>
 
             <div className={styles.inboxList}>
-                <Suggestions suggestions={chats} name="find-chat" />
+                {searchValue ? (
+                    <Suggestions suggestions={userSuggestions} name="find-friend" onClearSearch={clearSearch}/>
+                ) : (
+                    <Suggestions suggestions={chats} name="find-chat" onClearSearch={clearSearch}/>
+                )}
             </div>
         </div>
     );
